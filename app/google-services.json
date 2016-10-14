@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "182477203042",
+    "firebase_url": "https://bias-7675c.firebaseio.com",
+    "project_id": "bias-7675c",
+    "storage_bucket": "bias-7675c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:182477203042:android:9c1d4a0538138568",
+        "android_client_info": {
+          "package_name": "io.whitegoldlabs.bias"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "182477203042-ba1gr9bd7c8rnm5shbrhm4m34nvgcg06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhF3-Hr_jDLJaWfppdKs0Dkf9KmxP2Gno"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
