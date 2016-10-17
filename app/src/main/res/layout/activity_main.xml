@@ -13,6 +13,15 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:id="@+id/txtHello" />
+        android:text="This page reserved for future features."
+        android:id="@+id/txtReserved" />
+
+    <Button
+        android:text="Go to List"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnList"
+        android:layout_below="@+id/txtReserved"
+        android:layout_alignParentStart="true"
+        android:onClick="goToList" />
 </RelativeLayout>
