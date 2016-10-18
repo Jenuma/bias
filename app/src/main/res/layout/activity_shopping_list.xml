@@ -36,8 +36,9 @@
         android:inputType="text"
         android:ems="10"
         android:id="@+id/editItem"
-        android:singleLine="true"
+        android:maxLines="1"
         android:hint="Item"
+        android:imeOptions="actionDone"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/ulShoppingList" />
