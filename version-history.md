@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - App can now display shopping list in real time
 - App can add new shopping items in real time
 
-# [0.2.0] - 2016-10-19
+## [0.2.0] - 2016-10-19
 - User can now remove items from the list by long-pressing one and selecting 'remove'
 - User can now remove all items by long-pressing one and selecting 'remove all'
 - Items' `crossed` state now persists and displays appropriately, even on startup or resume
