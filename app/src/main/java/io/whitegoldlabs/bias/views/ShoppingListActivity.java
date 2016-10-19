@@ -1,12 +1,17 @@
 package io.whitegoldlabs.bias.views;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -20,9 +25,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import io.whitegoldlabs.bias.R;
+import io.whitegoldlabs.bias.common.ItemAdapter;
+import io.whitegoldlabs.bias.models.Item;
+
+import static android.widget.AdapterView.AdapterContextMenuInfo;
 
 public class ShoppingListActivity extends AppCompatActivity
 {
@@ -31,7 +39,9 @@ public class ShoppingListActivity extends AppCompatActivity
     private EditText editItem;
 
     private ArrayAdapter adapter;
-    private List<String> entries;
+    private ArrayList<Item> items;
+
+    private int latestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -45,13 +55,43 @@ public class ShoppingListActivity extends AppCompatActivity
         listenForListChanges();
     }
 
+    /**
+     * Adds an item to the list.
+     *
+     * @param view The view that called this method.
+     */
     public void addItem(View view)
     {
-        String newItem = editItem.getText().toString();
+        String newId = Integer.toString(latestId + 1);
+        String newName = editItem.getText().toString();
 
-        db.child("items").child(getNewId()).setValue(newItem);
+        db.child("items").child(newId).child("name").setValue(newName);
+        db.child("items").child(newId).child("crossed").setValue(false);
 
         editItem.setText("");
+    }
+
+    /**
+     * Removes an item from the list.
+     *
+     * @param menuItem The menu item that called this method.
+     */
+    public void removeItem(MenuItem menuItem)
+    {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuItem.getMenuInfo();
+
+        Item item = items.get(info.position);
+        db.child("items").child(Integer.toString(item.getId())).removeValue();
+    }
+
+    /**
+     * Removes all items from the list.
+     *
+     * @param menuItem The menu item that called this method.
+     */
+    public void removeAll(MenuItem menuItem)
+    {
+        db.child("items").removeValue();
     }
 
     private void initItemForm()
@@ -88,17 +128,40 @@ public class ShoppingListActivity extends AppCompatActivity
 
     private void initList()
     {
-        entries = new ArrayList<>();
+        items = new ArrayList<>();
 
-        adapter = new ArrayAdapter<>
+        adapter = new ItemAdapter
         (
-                ShoppingListActivity.this,
-                android.R.layout.simple_list_item_1,
-                entries
+                items,
+                ShoppingListActivity.this
         );
 
         ListView ulShoppingList = (ListView)findViewById(R.id.ulShoppingList);
         ulShoppingList.setAdapter(adapter);
+
+        ulShoppingList.setOnItemClickListener
+        (
+            new AdapterView.OnItemClickListener()
+            {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+                {
+                    crossItem(position, view);
+                }
+            }
+        );
+
+        registerForContextMenu(ulShoppingList);
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
+        menu.setHeaderTitle(items.get(info.position).getName());
+
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_shopping_list, menu);
     }
 
     private void connectToDatabase()
@@ -117,14 +180,19 @@ public class ShoppingListActivity extends AppCompatActivity
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot)
                 {
-                    entries.clear();
+                    items.clear();
 
                     for(DataSnapshot snapshot : dataSnapshot.getChildren())
                     {
-                        String item = snapshot.getValue(String.class);
-                        entries.add(item);
-                        adapter.notifyDataSetChanged();
+                        Item item = snapshot.getValue(Item.class);
+                        item.setId(Integer.parseInt(snapshot.getKey()));
+
+                        items.add(item);
+
+                        latestId = item.getId();
                     }
+
+                    adapter.notifyDataSetChanged();
                 }
                 @Override
                 public void onCancelled(DatabaseError databaseError)
@@ -135,9 +203,16 @@ public class ShoppingListActivity extends AppCompatActivity
         );
     }
 
-    private String getNewId()
+    private void crossItem(int position, View view)
     {
-        return Integer.toString(entries.size());
+        Item item = items.get(position);
+
+        db.child("items")
+                .child(Integer.toString(item.getId()))
+                .child("crossed")
+                .setValue(item.toggleCrossed());
+
+        ((TextView)view).setPaintFlags(((TextView)view).getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
     private void hideSoftKeyboard(Activity activity)

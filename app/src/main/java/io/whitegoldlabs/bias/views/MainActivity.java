@@ -9,8 +9,6 @@ import io.whitegoldlabs.bias.R;
 
 public class MainActivity extends AppCompatActivity
 {
-    //private TextView txtHello;
-
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
