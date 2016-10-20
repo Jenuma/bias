@@ -62,13 +62,17 @@ public class ShoppingListActivity extends AppCompatActivity
      */
     public void addItem(View view)
     {
-        String newId = Integer.toString(latestId + 1);
         String newName = editItem.getText().toString();
 
-        db.child("items").child(newId).child("name").setValue(newName);
-        db.child("items").child(newId).child("crossed").setValue(false);
+        if(newName.length() > 0)
+        {
+            String newId = Integer.toString(latestId + 1);
 
-        editItem.setText("");
+            db.child("items").child(newId).child("name").setValue(newName);
+            db.child("items").child(newId).child("crossed").setValue(false);
+
+            editItem.setText("");
+        }
     }
 
     /**
