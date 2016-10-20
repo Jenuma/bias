@@ -17,3 +17,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - User can now remove items from the list by long-pressing one and selecting 'remove'
 - User can now remove all items by long-pressing one and selecting 'remove all'
 - Items' `crossed` state now persists and displays appropriately, even on startup or resume
+
+## [0.2.1] - 2016-10-20
+- Fixed problem where user could add a blank item to the database
