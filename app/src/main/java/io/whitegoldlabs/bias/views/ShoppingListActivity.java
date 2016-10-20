@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,6 +44,7 @@ public class ShoppingListActivity extends AppCompatActivity
 
     private Item selectedItem;
 
+    private final int MAX_CHARS = 35;
     private int latestId;
 
     @Override
@@ -65,6 +67,18 @@ public class ShoppingListActivity extends AppCompatActivity
     public void addItem(View view)
     {
         String newName = editItem.getText().toString();
+
+        if(newName.length() > MAX_CHARS)
+        {
+            Toast.makeText
+            (
+                ShoppingListActivity.this,
+                "Item cannot contain more than " + MAX_CHARS + " characters.",
+                Toast.LENGTH_SHORT
+            ).show();
+
+            return;
+        }
 
         if(newName.length() > 0)
         {
