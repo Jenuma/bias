@@ -41,6 +41,8 @@ public class ShoppingListActivity extends AppCompatActivity
     private ArrayAdapter adapter;
     private ArrayList<Item> items;
 
+    private Item selectedItem;
+
     private int latestId;
 
     @Override
@@ -82,10 +84,7 @@ public class ShoppingListActivity extends AppCompatActivity
      */
     public void removeItem(MenuItem menuItem)
     {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuItem.getMenuInfo();
-
-        Item item = items.get(info.position);
-        db.child("items").child(Integer.toString(item.getId())).removeValue();
+        db.child("items").child(Integer.toString(selectedItem.getId())).removeValue();
     }
 
     /**
@@ -162,7 +161,8 @@ public class ShoppingListActivity extends AppCompatActivity
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
     {
         AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
-        menu.setHeaderTitle(items.get(info.position).getName());
+        selectedItem = items.get(info.position);
+        menu.setHeaderTitle(selectedItem.getName());
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_shopping_list, menu);

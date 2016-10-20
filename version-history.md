@@ -20,3 +20,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.2.1] - 2016-10-20
 - Fixed problem where user could add a blank item to the database
+
+## [0.2.2] - 2016-10-20
+- Fixed problem where user could delete an item after another user selects it
