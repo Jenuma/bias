@@ -95,6 +95,7 @@ public class ShoppingListActivity extends AppCompatActivity
     public void removeAll(MenuItem menuItem)
     {
         db.child("items").removeValue();
+        latestId = -1;
     }
 
     private void initItemForm()
