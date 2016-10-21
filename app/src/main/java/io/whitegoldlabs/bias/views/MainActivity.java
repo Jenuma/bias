@@ -21,4 +21,10 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(MainActivity.this, ShoppingListActivity.class);
         startActivity(intent);
     }
+
+    public void goToLayout(View view)
+    {
+        Intent intent = new Intent(MainActivity.this, TestLayoutActivity.class);
+        startActivity(intent);
+    }
 }

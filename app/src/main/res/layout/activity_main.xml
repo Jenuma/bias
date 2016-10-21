@@ -24,4 +24,13 @@
         android:layout_below="@+id/txtReserved"
         android:layout_alignParentStart="true"
         android:onClick="goToList" />
+
+    <Button
+        android:text="Go to Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btnList"
+        android:layout_alignParentStart="true"
+        android:id="@+id/btnLayout"
+        android:onClick="goToLayout" />
 </RelativeLayout>
