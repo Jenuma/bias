@@ -1,30 +1,33 @@
 package io.whitegoldlabs.bias.views;
 
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import io.whitegoldlabs.bias.R;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
 {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        super.initAuth();
     }
 
-    public void goToList(View view)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
     {
-        Intent intent = new Intent(MainActivity.this, ShoppingListActivity.class);
-        startActivity(intent);
+        super.onCreateOptionsMenu(menu);
+        return true;
     }
 
-    public void goToLayout(View view)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
     {
-        Intent intent = new Intent(MainActivity.this, TestLayoutActivity.class);
-        startActivity(intent);
+        super.onOptionsItemSelected(menuItem);
+        return true;
     }
 }
