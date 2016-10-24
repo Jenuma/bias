@@ -28,4 +28,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - The items' incrementing ID now resets after remove-all is performed
 
 ## [0.4.2] - 2016-10-20
-- Limited item length to 35 characters.
+- Limited item length to 35 characters
+
+## [0.5.2] - 2016-10-24
+- Added blank test layout to new activity
