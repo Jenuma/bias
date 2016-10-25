@@ -3,12 +3,9 @@ package io.whitegoldlabs.bias.views;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -17,12 +14,24 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import io.whitegoldlabs.bias.R;
 
+/**
+ * This page prompts the user to enter their authorized email/password pair to gain read
+ * and write access to the shopping list database.
+ *
+ * @author Clifton Roberts
+ */
 public class LoginActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
     private FirebaseAuth auth;                                                         //
     // --------------------------------------------------------------------------------//
 
+    /**
+     * Sets the content view to the login layout and initializes login form and
+     * Firebase authentication instance.
+     *
+     * @param savedInstanceState The dynamic state of the activity, if provided.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -34,6 +43,15 @@ public class LoginActivity extends BaseActivity
         auth = FirebaseAuth.getInstance();
     }
 
+    // --------------------------------------------------------------------------------//
+    // Behavior                                                                        //
+    // --------------------------------------------------------------------------------//
+
+    /**
+     * Attempts to authenticate the user's input email and password pair.
+     *
+     * @param view The widget that called this method.
+     */
     public void login(View view)
     {
         EditText editEmail = (EditText)findViewById(R.id.editEmail);
@@ -44,59 +62,59 @@ public class LoginActivity extends BaseActivity
 
         if(email.equals("") || password.equals(""))
         {
-            LoginActivity.super.toast("Incorrect email or password.");
+            toast("Incorrect email or password.");
             return;
         }
 
         auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>()
-            {
-                @Override
-                public void onComplete(@NonNull Task<AuthResult> task)
-                {
-                    if(task.isSuccessful())
-                    {
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                    else
-                    {
-                        LoginActivity.super.toast("Incorrect email or password.");
-                    }
-                }
-            });
+            .addOnCompleteListener(LoginActivity.this, getOnCompleteListener());
     }
 
+    // --------------------------------------------------------------------------------//
+    // Private Methods                                                                 //
+    // --------------------------------------------------------------------------------//
+
+    /**
+     * Initializes the login form so that it listens for the return key and "done"
+     * soft keyboard action; when triggered, it will attempt to log the user in and
+     * hide the soft keyboard from the window.
+     */
     private void initLoginForm()
     {
         final EditText editPassword = (EditText)findViewById(R.id.editPassword);
         final EditText editEmail = (EditText)findViewById(R.id.editEmail);
         final Button btnLogin = (Button)findViewById(R.id.btnLogin);
 
-        EditText.OnEditorActionListener listener = new EditText.OnEditorActionListener()
+        editEmail.setOnEditorActionListener(getOnEditorActionListener(btnLogin));
+        editPassword.setOnEditorActionListener(getOnEditorActionListener(btnLogin));
+    }
+
+    // --------------------------------------------------------------------------------//
+    // Listeners                                                                       //
+    // --------------------------------------------------------------------------------//
+
+    /**
+     * Creates a new OnCompleteListener for authenticating users.
+     *
+     * @return The new OnCompleteListener.
+     */
+    private OnCompleteListener<AuthResult> getOnCompleteListener()
+    {
+        return new OnCompleteListener<AuthResult>()
         {
             @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            public void onComplete(@NonNull Task<AuthResult> task)
             {
-                if(actionId == EditorInfo.IME_ACTION_DONE)
+                if(task.isSuccessful())
                 {
-                    btnLogin.performClick();
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
                 }
-
-                if(event != null)
+                else
                 {
-                    if(event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)
-                    {
-                        btnLogin.performClick();
-                    }
+                    LoginActivity.super.toast("Incorrect email or password.");
                 }
-
-                LoginActivity.super.hideSoftKeyboard();
-                return false;
             }
         };
-
-        editEmail.setOnEditorActionListener(listener);
-        editPassword.setOnEditorActionListener(listener);
     }
 }
