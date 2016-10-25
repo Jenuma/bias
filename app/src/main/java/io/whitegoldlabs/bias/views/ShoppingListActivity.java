@@ -1,23 +1,20 @@
 package io.whitegoldlabs.bias.views;
 
-import android.app.Activity;
 import android.graphics.Paint;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,22 +30,25 @@ import io.whitegoldlabs.bias.models.Item;
 
 import static android.widget.AdapterView.AdapterContextMenuInfo;
 
-public class ShoppingListActivity extends AppCompatActivity
+public class ShoppingListActivity extends BaseActivity
 {
-    private DatabaseReference db;
-
-    private EditText editItem;
-
-    private ArrayAdapter adapter;
-    private ArrayList<Item> items;
-
-    private Item selectedItem;
-
-    private final int MAX_CHARS = 35;
-    private int latestId;
+    // Fields -------------------------------------------------------------------------//
+    private DatabaseReference db;                                                      //
+    private final String DB_URL = "https://bias-7675c.firebaseio.com/";                //
+                                                                                       //
+    private EditText editItem;                                                         //
+                                                                                       //
+    private ArrayAdapter adapter;                                                      //
+    private ArrayList<Item> items;                                                     //
+                                                                                       //
+    private Item selectedItem;                                                         //
+                                                                                       //
+    private final int MAX_CHARS = 35;                                                  //
+    private int latestId;                                                              //
+    // --------------------------------------------------------------------------------//
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
@@ -57,6 +57,22 @@ public class ShoppingListActivity extends AppCompatActivity
         initList();
         connectToDatabase();
         listenForListChanges();
+
+        super.initAuth();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        super.onOptionsItemSelected(menuItem);
+        return true;
     }
 
     /**
@@ -70,13 +86,7 @@ public class ShoppingListActivity extends AppCompatActivity
 
         if(newName.length() > MAX_CHARS)
         {
-            Toast.makeText
-            (
-                ShoppingListActivity.this,
-                "Item cannot contain more than " + MAX_CHARS + " characters.",
-                Toast.LENGTH_SHORT
-            ).show();
-
+            super.toast("Item cannot contain more than " + MAX_CHARS + " characters.");
             return;
         }
 
@@ -84,8 +94,21 @@ public class ShoppingListActivity extends AppCompatActivity
         {
             String newId = Integer.toString(latestId + 1);
 
-            db.child("items").child(newId).child("name").setValue(newName);
-            db.child("items").child(newId).child("crossed").setValue(false);
+            DatabaseReference.CompletionListener listener = new DatabaseReference.CompletionListener()
+            {
+                @Override
+                public void onComplete(DatabaseError error, DatabaseReference ref)
+                {
+                    if(error != null)
+                    {
+                        System.out.println("ERROR: " + error);
+                        ShoppingListActivity.super.toast(error.getMessage());
+                    }
+                }
+            };
+
+            db.child("items").child(newId).child("name").setValue(newName, listener);
+            db.child("items").child(newId).child("crossed").setValue(false, listener);
 
             editItem.setText("");
         }
@@ -137,7 +160,7 @@ public class ShoppingListActivity extends AppCompatActivity
                         }
                     }
 
-                    hideSoftKeyboard(ShoppingListActivity.this);
+                    ShoppingListActivity.super.hideSoftKeyboard();
                     return false;
                 }
             }
@@ -187,7 +210,7 @@ public class ShoppingListActivity extends AppCompatActivity
     {
         db = FirebaseDatabase
             .getInstance()
-            .getReferenceFromUrl("https://bias-7675c.firebaseio.com/");
+            .getReferenceFromUrl(DB_URL);
     }
 
     private void listenForListChanges()
@@ -214,9 +237,10 @@ public class ShoppingListActivity extends AppCompatActivity
                     adapter.notifyDataSetChanged();
                 }
                 @Override
-                public void onCancelled(DatabaseError databaseError)
+                public void onCancelled(DatabaseError error)
                 {
-                    System.out.println("ERROR: " + databaseError.getMessage());
+                    System.out.println("ERROR: " + error.getMessage());
+                    ShoppingListActivity.super.toast(error.getMessage());
                 }
             }
         );
@@ -227,23 +251,10 @@ public class ShoppingListActivity extends AppCompatActivity
         Item item = items.get(position);
 
         db.child("items")
-                .child(Integer.toString(item.getId()))
-                .child("crossed")
-                .setValue(item.toggleCrossed());
+            .child(Integer.toString(item.getId()))
+            .child("crossed")
+            .setValue(item.toggleCrossed());
 
         ((TextView)view).setPaintFlags(((TextView)view).getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG);
-    }
-
-    private void hideSoftKeyboard(Activity activity)
-    {
-        InputMethodManager imm = (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        View view = activity.getCurrentFocus();
-
-        if(view == null)
-        {
-            view = new View(activity);
-        }
-
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

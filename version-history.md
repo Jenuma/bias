@@ -32,3 +32,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [0.5.2] - 2016-10-24
 - Added blank test layout to new activity
+
+## [0.6.2] - 2016-10-25
+- Added basic authentication
+- User must now log in with authorized account to read/write to database
+- Added action bar overflow menu for navigating through the app and signing out
+- Refactored shared code into new BaseActivity for reuse
