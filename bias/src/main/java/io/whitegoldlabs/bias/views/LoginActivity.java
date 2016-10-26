@@ -3,9 +3,11 @@ package io.whitegoldlabs.bias.views;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -24,6 +26,9 @@ public class LoginActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
     private FirebaseAuth auth;                                                         //
+                                                                                       //
+    private static final String ERROR = "Incorrect email or password.";                //
+    private static final String TAG = "[LoginActivity]";                               //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -35,12 +40,16 @@ public class LoginActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d(TAG, "Creating LoginActivity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         initLoginForm();
 
         auth = FirebaseAuth.getInstance();
+
+        Log.d(TAG, "LoginActivity created.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -54,6 +63,8 @@ public class LoginActivity extends BaseActivity
      */
     public void login(View view)
     {
+        Log.d(TAG, "Attempting to authenticate user...");
+
         EditText editEmail = (EditText)findViewById(R.id.editEmail);
         EditText editPassword = (EditText)findViewById(R.id.editPassword);
 
@@ -62,9 +73,13 @@ public class LoginActivity extends BaseActivity
 
         if(email.equals("") || password.equals(""))
         {
-            toast("Incorrect email or password.");
+            Log.e(TAG, ERROR);
+            toast(ERROR);
             return;
         }
+
+        ProgressBar pbLoginLoading = (ProgressBar)findViewById(R.id.pbLoginLoading);
+        pbLoginLoading.setVisibility(View.VISIBLE);
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(LoginActivity.this, getOnCompleteListener());
@@ -81,12 +96,16 @@ public class LoginActivity extends BaseActivity
      */
     private void initLoginForm()
     {
+        Log.d(TAG, "Initializing login form...");
+
         final EditText editPassword = (EditText)findViewById(R.id.editPassword);
         final EditText editEmail = (EditText)findViewById(R.id.editEmail);
         final Button btnLogin = (Button)findViewById(R.id.btnLogin);
 
         editEmail.setOnEditorActionListener(getOnEditorActionListener(btnLogin));
         editPassword.setOnEditorActionListener(getOnEditorActionListener(btnLogin));
+
+        Log.d(TAG, "Login form initialized.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -107,12 +126,15 @@ public class LoginActivity extends BaseActivity
             {
                 if(task.isSuccessful())
                 {
+                    Log.d(TAG, "User authenticated successfully.");
+
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
                 else
                 {
-                    LoginActivity.super.toast("Incorrect email or password.");
+                    Log.e(TAG, ERROR);
+                    LoginActivity.super.toast(ERROR);
                 }
             }
         };

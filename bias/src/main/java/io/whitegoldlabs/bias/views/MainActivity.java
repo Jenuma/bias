@@ -1,6 +1,7 @@
 package io.whitegoldlabs.bias.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +14,10 @@ import io.whitegoldlabs.bias.R;
  */
 public class MainActivity extends BaseActivity
 {
+    // Fields -------------------------------------------------------------------------//
+    private static final String TAG = "[MainActivity]";                                //
+    // --------------------------------------------------------------------------------//
+
     /**
      * Sets the content view to the main layout and initializes Firebase authentication.
      *
@@ -21,10 +26,14 @@ public class MainActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d(TAG, "Creating MainActivity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         super.initAuth();
+
+        Log.d(TAG, "MainActivity created.");
     }
 
     // --------------------------------------------------------------------------------//

@@ -1,6 +1,7 @@
 package io.whitegoldlabs.bias.views;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,6 +15,10 @@ import io.whitegoldlabs.bias.R;
  */
 public class TestLayoutActivity extends BaseActivity
 {
+    // Fields -------------------------------------------------------------------------//
+    private static final String TAG = "[TestLayoutActivity]";                          //
+    // --------------------------------------------------------------------------------//
+
     /**
      * Sets the content view to the main layout and initializes Firebase authentication.
      *
@@ -22,10 +27,14 @@ public class TestLayoutActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d(TAG, "Creating TestLayoutActivity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test_layout);
 
         super.initAuth();
+
+        Log.d(TAG, "TestLayoutActivity created.");
     }
 
     // --------------------------------------------------------------------------------//
