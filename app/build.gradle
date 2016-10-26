@@ -17,6 +17,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        develop {
+            buildConfigField 'String', 'DB_URL', '"https://bias-7675c.firebaseio.com/develop"'
+        }
+        prod {
+            buildConfigField 'String', 'DB_URL', '"https://bias-7675c.firebaseio.com/prod"'
+        }
+    }
 }
 
 dependencies {

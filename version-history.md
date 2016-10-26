@@ -38,3 +38,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - User must now log in with authorized account to read/write to database
 - Added action bar overflow menu for navigating through the app and signing out
 - Refactored shared code into new BaseActivity for reuse
+
+## [0.7.2] - 2016-10-26
+- Added `prod` and `develop` product flavors to build file
+- App now has two separate databases, one for production and one for development
