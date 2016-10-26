@@ -25,6 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import io.whitegoldlabs.bias.BuildConfig;
 import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.common.ItemAdapter;
 import io.whitegoldlabs.bias.models.Item;
@@ -43,8 +44,7 @@ import static android.widget.AdapterView.AdapterContextMenuInfo;
 public class ShoppingListActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
-    private DatabaseReference db;                                                      //
-    private final String DB_URL = "https://bias-7675c.firebaseio.com/";                //
+    private DatabaseReference db;
                                                                                        //
     private EditText editItem;                                                         //
                                                                                        //
@@ -234,7 +234,7 @@ public class ShoppingListActivity extends BaseActivity
     {
         db = FirebaseDatabase
             .getInstance()
-            .getReferenceFromUrl(DB_URL);
+            .getReferenceFromUrl(BuildConfig.DB_URL);
     }
 
     /**
