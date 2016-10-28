@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,8 @@ public abstract class BaseActivity extends AppCompatActivity
     // Fields -------------------------------------------------------------------------//
     private FirebaseAuth auth;                                                         //
     private FirebaseAuth.AuthStateListener authListener;                               //
+                                                                                       //
+    private static final String TAG = "[BaseActivity]";                                //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -41,7 +44,11 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d(TAG, "Creating BaseActivity...");
+
         super.onCreate(savedInstanceState);
+
+        Log.d(TAG, "BaseActivity created.");
     }
 
     /**
@@ -55,7 +62,11 @@ public abstract class BaseActivity extends AppCompatActivity
 
         if(!this.getClass().getSimpleName().equals("LoginActivity"))
         {
+            Log.d(TAG, "Starting auth state listener...");
+
             auth.addAuthStateListener(authListener);
+
+            Log.d(TAG, "Auth state listener started.");
         }
     }
 
@@ -70,7 +81,11 @@ public abstract class BaseActivity extends AppCompatActivity
 
         if(authListener != null)
         {
+            Log.d(TAG, "Removing auth state listener...");
+
             auth.removeAuthStateListener(authListener);
+
+            Log.d(TAG, "Auth state listener removed.");
         }
     }
 
@@ -88,6 +103,8 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        Log.d(TAG, "Creating action bar overflow menu.");
+
         super.onCreateOptionsMenu(menu);
 
         getMenuInflater().inflate(R.menu.menu_action_bar, menu);
@@ -95,20 +112,22 @@ public abstract class BaseActivity extends AppCompatActivity
         switch(this.getClass().getSimpleName())
         {
             case "MainActivity":
-                return true;
+                break;
             case "ShoppingListActivity":
                 MenuItem goToListItem = menu.findItem(R.id.action_go_to_list);
                 goToListItem.setVisible(false);
 
-                return true;
+                break;
             case "TestLayoutActivity":
                 MenuItem goToLayoutItem = menu.findItem(R.id.action_go_to_layout);
                 goToLayoutItem.setVisible(false);
 
-                return true;
+                break;
             default:
                 return false;
         }
+        Log.d(TAG, "Action bar overflow menu created.");
+        return true;
     }
 
     /**
@@ -120,6 +139,8 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
+        Log.d(TAG, "Action bar overflow menu item selected.");
+
         super.onOptionsItemSelected(menuItem);
 
         switch(menuItem.getItemId())
@@ -134,8 +155,8 @@ public abstract class BaseActivity extends AppCompatActivity
                 signOut();
                 return true;
             default:
-                String error = "ERROR: Invalid menu action.";
-                System.out.println(error);
+                String error = "Invalid menu action!";
+                Log.e(TAG, error);
                 toast(error);
                 return false;
         }
@@ -172,6 +193,8 @@ public abstract class BaseActivity extends AppCompatActivity
      */
     protected void hideSoftKeyboard()
     {
+        Log.d(TAG, "Hiding soft keyboard...");
+
         InputMethodManager imm = (InputMethodManager)this.getSystemService(Activity.INPUT_METHOD_SERVICE);
         View view = this.getCurrentFocus();
 
@@ -181,6 +204,8 @@ public abstract class BaseActivity extends AppCompatActivity
         }
 
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+        Log.d(TAG, "Soft keyboard hidden.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -192,6 +217,8 @@ public abstract class BaseActivity extends AppCompatActivity
      */
     private void goToList()
     {
+        Log.d(TAG, "Switching to ShoppingListActivity...");
+
         Intent intent = new Intent(BaseActivity.this, ShoppingListActivity.class);
         startActivity(intent);
     }
@@ -201,6 +228,8 @@ public abstract class BaseActivity extends AppCompatActivity
      */
     private void goToLayout()
     {
+        Log.d(TAG, "Switching to TestLayoutActivity...");
+
         Intent intent = new Intent(BaseActivity.this, TestLayoutActivity.class);
         startActivity(intent);
     }
@@ -211,7 +240,11 @@ public abstract class BaseActivity extends AppCompatActivity
      */
     private void signOut()
     {
+        Log.d(TAG, "Signing out user...");
+
         auth.signOut();
+
+        Log.d(TAG, "User signed out.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -239,6 +272,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
                 if(softKeyboardDone)
                 {
+                    Log.d(TAG, "Software keyboard DONE action observed.");
                     button.performClick();
                 }
 
@@ -249,6 +283,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
                     if(isReturnKey && keyPressed)
                     {
+                        Log.d(TAG, "Hardware keyboard RETURN key pressed down.");
                         button.performClick();
                     }
                 }
@@ -271,9 +306,13 @@ public abstract class BaseActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth)
             {
+                Log.d(TAG, "User's authentication state change observed.");
+
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user == null)
                 {
+                    Log.d(TAG, "No user logged in. Redirecting to LoginActivity.");
+
                     Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                     startActivity(intent);
                 }

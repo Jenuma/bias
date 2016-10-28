@@ -1,7 +1,9 @@
 package io.whitegoldlabs.bias.views;
 
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -44,9 +47,10 @@ import static android.widget.AdapterView.AdapterContextMenuInfo;
 public class ShoppingListActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
-    private DatabaseReference db;
+    private DatabaseReference db;                                                      //
                                                                                        //
     private EditText editItem;                                                         //
+    private ProgressBar pbListLoading;                                                 //
                                                                                        //
     private ArrayAdapter adapter;                                                      //
     private ArrayList<Item> items;                                                     //
@@ -55,8 +59,10 @@ public class ShoppingListActivity extends BaseActivity
                                                                                        //
     private Item selectedItem;                                                         //
                                                                                        //
-    private final int MAX_CHARS = 35;                                                  //
     private int latestId;                                                              //
+                                                                                       //
+    private static final int MAX_CHARS = 35;                                           //
+    private static final String TAG = "[ShoppingListActivity]";                        //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -68,6 +74,8 @@ public class ShoppingListActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        Log.d(TAG, "Creating ShoppingListActivity...");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_list);
 
@@ -78,6 +86,8 @@ public class ShoppingListActivity extends BaseActivity
         db.child("items").addValueEventListener(getValueEventListener());
 
         initAuth();
+
+        Log.d(TAG, "ShoppingListActivity created.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -97,6 +107,18 @@ public class ShoppingListActivity extends BaseActivity
     }
 
     /**
+     * Handles which action to take based on what menu item was selected.
+     *
+     * @param menuItem The menu item selected by the user.
+     * @return true if the event was handled as expected, false otherwise.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem)
+    {
+        return super.onOptionsItemSelected(menuItem);
+    }
+
+    /**
      * Listens for the creation of the item list's context menu, gets the selected item,
      * and inflates the menu.
      *
@@ -112,24 +134,16 @@ public class ShoppingListActivity extends BaseActivity
             ContextMenu.ContextMenuInfo menuInfo
     )
     {
+        Log.d(TAG, "Creating context menu...");
+
         AdapterContextMenuInfo info = (AdapterContextMenuInfo)menuInfo;
         selectedItem = items.get(info.position);
         menu.setHeaderTitle(selectedItem.getName());
 
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_shopping_list, menu);
-    }
 
-    /**
-     * Handles which action to take based on what menu item was selected.
-     *
-     * @param menuItem The menu item selected by the user.
-     * @return true if the event was handled as expected, false otherwise.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        return super.onOptionsItemSelected(menuItem);
+        Log.d(TAG, "Context menu created.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -149,12 +163,16 @@ public class ShoppingListActivity extends BaseActivity
 
         if(newName.length() > MAX_CHARS)
         {
+            Log.d(TAG, "User tried to create new item with too long of a name.");
+
             super.toast("Item cannot contain more than " + MAX_CHARS + " characters.");
             return;
         }
 
         if(newName.length() > 0)
         {
+            Log.d(TAG, "User adding new item...");
+
             String newId = Integer.toString(latestId + 1);
 
             db.child("items")
@@ -177,6 +195,8 @@ public class ShoppingListActivity extends BaseActivity
      */
     public void removeItem(MenuItem menuItem)
     {
+        Log.d(TAG, "User removing an item...");
+
         db.child("items")
             .child(Integer.toString(selectedItem.getId()))
             .removeValue(getCompletionListener());
@@ -189,6 +209,8 @@ public class ShoppingListActivity extends BaseActivity
      */
     public void removeAll(MenuItem menuItem)
     {
+        Log.d(TAG, "User removing all items...");
+
         db.child("items").removeValue(getCompletionListener());
         latestId = -1;
     }
@@ -204,10 +226,14 @@ public class ShoppingListActivity extends BaseActivity
      */
     private void initItemForm()
     {
+        Log.d(TAG, "Initializing new item form...");
+
         final Button btnAddItem = (Button)findViewById(R.id.btnAddItem);
 
         editItem = (EditText)findViewById(R.id.editItem);
         editItem.setOnEditorActionListener(getOnEditorActionListener(btnAddItem));
+
+        Log.d(TAG, "New item form initialized.");
     }
 
     /**
@@ -218,6 +244,8 @@ public class ShoppingListActivity extends BaseActivity
      */
     private void initList()
     {
+        Log.d(TAG, "Initializing shopping list...");
+
         items = new ArrayList<>();
         adapter = new ItemAdapter(items, ShoppingListActivity.this);
 
@@ -225,6 +253,8 @@ public class ShoppingListActivity extends BaseActivity
         ulShoppingList.setAdapter(adapter);
         ulShoppingList.setOnItemClickListener(getOnItemClickListener());
         registerForContextMenu(ulShoppingList);
+
+        Log.d(TAG, "Shopping list initialized.");
     }
 
     /**
@@ -232,9 +262,13 @@ public class ShoppingListActivity extends BaseActivity
      */
     private void connectToDatabase()
     {
+        Log.d(TAG, "Connecting to Firebase...");
+
         db = FirebaseDatabase
             .getInstance()
             .getReferenceFromUrl(BuildConfig.DB_URL);
+
+        Log.d(TAG, "Connected to Firebase.");
     }
 
     /**
@@ -245,6 +279,8 @@ public class ShoppingListActivity extends BaseActivity
      */
     private void crossItem(int position, View view)
     {
+        Log.d(TAG, "User crossing item off the list...");
+
         Item item = items.get(position);
 
         db.child("items")
@@ -256,6 +292,8 @@ public class ShoppingListActivity extends BaseActivity
         (
             ((TextView)view).getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG
         );
+
+        Log.d(TAG, "Item crossed off the list successfully.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -282,9 +320,11 @@ public class ShoppingListActivity extends BaseActivity
                 {
                     if(error != null)
                     {
-                        System.out.println("ERROR: " + error);
-                        toast(error.getMessage());
+                        Log.e(TAG, "Database write failed! Details: " + error);
+                        toast("Database write failed!");
+                        return;
                     }
+                    Log.d(TAG, "Database write occurred successfully.");
                 }
             };
             return completionListener;
@@ -326,27 +366,59 @@ public class ShoppingListActivity extends BaseActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot)
             {
-                items.clear();
+                Log.d(TAG, "Notified of database change...");
 
-                for(DataSnapshot snapshot : dataSnapshot.getChildren())
-                {
-                    Item item = snapshot.getValue(Item.class);
-                    item.setId(Integer.parseInt(snapshot.getKey()));
-
-                    items.add(item);
-
-                    latestId = item.getId();
-                }
-
-                adapter.notifyDataSetChanged();
+                new DataChangeThread().execute(dataSnapshot);
             }
 
             @Override
             public void onCancelled(DatabaseError error)
             {
-                System.out.println("ERROR: " + error.getMessage());
-                ShoppingListActivity.this.toast(error.getMessage());
+                Log.e(TAG, "Database read failed! Details: " + error);
+                ShoppingListActivity.this.toast("Database read failed!");
             }
         };
+    }
+
+    /**
+     * Worker thread for getting the shopping list items from the database. Starts a
+     * progress bar in case retrieval takes more than a second and removes it when done.
+     */
+    private class DataChangeThread extends AsyncTask<DataSnapshot, Void, Void>
+    {
+        @Override
+        protected void onPreExecute()
+        {
+            pbListLoading = (ProgressBar)findViewById(R.id.pbListLoading);
+            pbListLoading.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected Void doInBackground(DataSnapshot... params)
+        {
+            items.clear();
+
+            Log.d(TAG, "DataChangeTask => Getting shopping list items from database...");
+
+            for(DataSnapshot snapshot : params[0].getChildren())
+            {
+                Item item = snapshot.getValue(Item.class);
+                item.setId(Integer.parseInt(snapshot.getKey()));
+
+                items.add(item);
+
+                latestId = item.getId();
+            }
+
+            Log.d(TAG, "DataChangeTask => Shopping list items retrieved successfully.");
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            pbListLoading.setVisibility(View.GONE);
+            adapter.notifyDataSetChanged();
+        }
     }
 }
