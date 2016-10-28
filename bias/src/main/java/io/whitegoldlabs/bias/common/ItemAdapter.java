@@ -1,6 +1,7 @@
 package io.whitegoldlabs.bias.common;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -85,20 +86,15 @@ public class ItemAdapter extends ArrayAdapter<Item>
         Item item = items.get(position);
         viewHolder.itemName.setText(item.getName());
 
-        if(item.isCrossed())
-        {
-            viewHolder.itemName.setPaintFlags
-            (
-                viewHolder.itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG
-            );
-        }
-        else
-        {
-            viewHolder.itemName.setPaintFlags
-            (
-                viewHolder.itemName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG)
-            );
-        }
+        int flags = item.isCrossed() ?
+                viewHolder.itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG :
+                viewHolder.itemName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG);
+
+        int color = item.isCrossed() ?
+                Color.parseColor("#FF0000") : Color.parseColor("#000000");
+
+        viewHolder.itemName.setPaintFlags(flags);
+        viewHolder.itemName.setTextColor(color);
 
         return view;
     }

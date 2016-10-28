@@ -1,9 +1,13 @@
 package io.whitegoldlabs.bias.views;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import io.whitegoldlabs.bias.R;
 
@@ -17,6 +21,10 @@ public class TestLayoutActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
     private static final String TAG = "[TestLayoutActivity]";                          //
+
+    ImageView imgTestA1;
+    ImageView imgTestA2;
+    ImageView imgTestA3;
     // --------------------------------------------------------------------------------//
 
     /**
@@ -35,6 +43,12 @@ public class TestLayoutActivity extends BaseActivity
         super.initAuth();
 
         Log.d(TAG, "TestLayoutActivity created.");
+
+        imgTestA1 = (ImageView)findViewById(R.id.imgTestA1);
+        imgTestA2 = (ImageView)findViewById(R.id.imgTestA2);
+        imgTestA3 = (ImageView)findViewById(R.id.imgTestA3);
+
+        new ImageChangeThread().execute();
     }
 
     // --------------------------------------------------------------------------------//
@@ -64,5 +78,44 @@ public class TestLayoutActivity extends BaseActivity
     {
         return super.onOptionsItemSelected(menuItem);
 
+    }
+
+    private class ImageChangeThread extends AsyncTask<Void, Void, Void>
+    {
+        @Override
+        protected Void doInBackground(Void... params)
+        {
+            while(true)
+            {
+                SystemClock.sleep(1000);
+                runThread(imgTestA1, View.VISIBLE);
+                SystemClock.sleep(1000);
+                runThread(imgTestA1, View.INVISIBLE);
+                SystemClock.sleep(1000);
+                runThread(imgTestA2, View.VISIBLE);
+                SystemClock.sleep(1000);
+                runThread(imgTestA2, View.INVISIBLE);
+                SystemClock.sleep(1000);
+                runThread(imgTestA3, View.VISIBLE);
+                SystemClock.sleep(1000);
+                runThread(imgTestA3, View.INVISIBLE);
+            }
+        }
+    }
+
+    private void runThread(final ImageView img, final int visibility)
+    {
+        try
+        {
+            runOnUiThread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    img.setVisibility(visibility);
+                }
+            });
+        }
+        catch(Exception ex) {}
     }
 }
