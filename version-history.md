@@ -42,3 +42,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.7.2] - 2016-10-26
 - Added `prod` and `develop` product flavors to build file
 - App now has two separate databases, one for production and one for development
+
+## [0.8.2] - 2016-10-28
+- Login screen now features progress circle to indicate loading
+- Shopping list screen also features progress circle
+- Shopping list database fetch logic moved to its own worker thread
