@@ -14,6 +14,7 @@
     >
 
     <Button
+        style="@style/ButtonTheme"
         android:text="Add Item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -34,6 +35,14 @@
         android:headerDividersEnabled="false"
     />
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/pbListLoading"
+        android:layout_centerInParent="true"
+        android:visibility="invisible"
+    />
+
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,16 +52,7 @@
         android:maxLines="1"
         android:hint="Item"
         android:imeOptions="actionDone"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/ulShoppingList"
-    />
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pbListLoading"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-    />
+        android:layout_alignBaseline="@+id/btnAddItem"
+        android:layout_alignBottom="@+id/btnAddItem"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
