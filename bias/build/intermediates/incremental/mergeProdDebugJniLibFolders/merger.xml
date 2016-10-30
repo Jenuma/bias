@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="B:\Projects\bias\bias\src\main\jniLibs"/></dataSet><dataSet config="prod"><source path="B:\Projects\bias\bias\src\prod\jniLibs"/></dataSet><dataSet config="debug"><source path="B:\Projects\bias\bias\src\debug\jniLibs"/></dataSet><dataSet config="prodDebug"><source path="B:\Projects\bias\bias\src\prodDebug\jniLibs"/></dataSet></merger>
