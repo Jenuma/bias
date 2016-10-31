@@ -1,9 +1,16 @@
 package io.whitegoldlabs.bias.views;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 
 import io.whitegoldlabs.bias.R;
 
@@ -30,6 +37,30 @@ public class MainActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        AccountHeader headerResult = new AccountHeaderBuilder()
+            .withActivity(MainActivity.this)
+            .withHeaderBackground(R.color.colorPrimary)
+            .addProfiles
+                (
+                        new ProfileDrawerItem().withEmail("jenuma@live.com")
+                )
+            .build();
+
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        new DrawerBuilder()
+            .withAccountHeader(headerResult)
+            .withActivity(MainActivity.this)
+            .withToolbar(toolbar)
+            .addDrawerItems
+                (
+                    new PrimaryDrawerItem().withIdentifier(1).withName("First"),
+                    new PrimaryDrawerItem().withIdentifier(2).withName("Second")
+                )
+            .withSelectedItem(-1)
+            .build();
 
         super.initAuth();
 
