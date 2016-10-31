@@ -10,7 +10,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="io.whitegoldlabs.bias.views.ShoppingListActivity"
+    tools:context="io.whitegoldlabs.bias.features.ShoppingListActivity"
     >
 
     <Button
@@ -25,24 +25,6 @@
         android:onClick="addItem"
     />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/btnAddItem"
-        android:layout_alignParentStart="true"
-        android:id="@+id/ulShoppingList"
-        style="@style/Widget.AppCompat.ListView"
-        android:headerDividersEnabled="false"
-    />
-
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/pbListLoading"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"
-    />
-
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -55,4 +37,15 @@
         android:layout_alignBaseline="@+id/btnAddItem"
         android:layout_alignBottom="@+id/btnAddItem"
         android:layout_alignParentStart="true" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@+id/btnAddItem"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/btnAddItem"
+        android:id="@+id/frameShoppingListFragmentContainer"
+        android:layout_alignParentBottom="true">
+
+    </FrameLayout>
 </RelativeLayout>

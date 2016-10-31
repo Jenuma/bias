@@ -1,28 +1,22 @@
-package io.whitegoldlabs.bias.views;
+package io.whitegoldlabs.bias.features;
 
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-
 import io.whitegoldlabs.bias.R;
 
 /**
- * This page is reserved for future features.
+ * This page currently just displays a picture of my test layout. I will use this
+ * activity to test the upcoming map highlight features.
  *
  * @author Clifton Roberts
  */
-public class MainActivity extends BaseActivity
+public class TestLayoutActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
-    private static final String TAG = "[MainActivity]";                                //
+    private static final String TAG = "[TestLayoutActivity]";                          //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -33,38 +27,14 @@ public class MainActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Log.d(TAG, "Creating MainActivity...");
+        Log.d(TAG, "Creating TestLayoutActivity...");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        AccountHeader headerResult = new AccountHeaderBuilder()
-            .withActivity(MainActivity.this)
-            .withHeaderBackground(R.color.colorPrimary)
-            .addProfiles
-                (
-                        new ProfileDrawerItem().withEmail("jenuma@live.com")
-                )
-            .build();
-
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        new DrawerBuilder()
-            .withAccountHeader(headerResult)
-            .withActivity(MainActivity.this)
-            .withToolbar(toolbar)
-            .addDrawerItems
-                (
-                    new PrimaryDrawerItem().withIdentifier(1).withName("First"),
-                    new PrimaryDrawerItem().withIdentifier(2).withName("Second")
-                )
-            .withSelectedItem(-1)
-            .build();
+        setContentView(R.layout.activity_test_layout);
 
         super.initAuth();
 
-        Log.d(TAG, "MainActivity created.");
+        Log.d(TAG, "TestLayoutActivity created.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -93,5 +63,6 @@ public class MainActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem menuItem)
     {
         return super.onOptionsItemSelected(menuItem);
+
     }
 }

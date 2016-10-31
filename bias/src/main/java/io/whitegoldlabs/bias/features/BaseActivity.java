@@ -1,4 +1,4 @@
-package io.whitegoldlabs.bias.views;
+package io.whitegoldlabs.bias.features;
 
 import android.app.Activity;
 import android.content.Intent;
