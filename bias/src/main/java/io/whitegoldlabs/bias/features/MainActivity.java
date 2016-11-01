@@ -74,16 +74,18 @@ public class MainActivity extends BaseActivity
                         .withIcon(FontAwesome.Icon.faw_home)
                         .withName("Home")
                         .withSelectable(false),
-                    new PrimaryDrawerItem()
+                    new ExpandableDrawerItem()
                         .withIdentifier(2)
-                        .withIcon(FontAwesome.Icon.faw_shopping_cart)
-                        .withName("Edit Cart")
+                        .withIcon(FontAwesome.Icon.faw_list)
+                        .withName("My List")
+                        .withDescription("X of Y items crossed.")
+                        .withSubItems(getListItems())
                         .withSelectable(false),
                     new ExpandableDrawerItem()
                         .withIdentifier(3)
-                        .withIcon(FontAwesome.Icon.faw_list)
-                        .withName("[Your List]")
-                        .withDescription("X of Y items crossed.")
+                        .withIcon(FontAwesome.Icon.faw_map_marker)
+                        .withName("Change Map")
+                        .withDescription("Walmart Supercenter - Store #853")
                         .withSubItems(getListItems())
                         .withSelectable(false),
                     new PrimaryDrawerItem()
@@ -93,11 +95,21 @@ public class MainActivity extends BaseActivity
                         .withSelectable(false),
                     new PrimaryDrawerItem()
                         .withIdentifier(5)
+                        .withIcon(FontAwesome.Icon.faw_shopping_cart)
+                        .withName("Edit Cart")
+                        .withSelectable(false),
+                    new PrimaryDrawerItem()
+                        .withIdentifier(6)
+                        .withIcon(FontAwesome.Icon.faw_map)
+                        .withName("Edit Map")
+                        .withSelectable(false),
+                    new PrimaryDrawerItem()
+                        .withIdentifier(7)
                         .withIcon(FontAwesome.Icon.faw_cog)
                         .withName("Settings")
                         .withSelectable(false),
                     new PrimaryDrawerItem()
-                        .withIdentifier(6)
+                        .withIdentifier(8)
                         .withIcon(FontAwesome.Icon.faw_sign_out)
                         .withName("Sign Out")
                         .withSelectable(false)
