@@ -69,6 +69,7 @@ public class ShoppingListFragment extends Fragment
         View view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
 
         ListView lvShoppingList = (ListView)view.findViewById(R.id.lvShoppingList);
+        pbListLoading = (ProgressBar)view.findViewById(R.id.pbListLoading);
 
         lvShoppingList.setAdapter(adapter);
         lvShoppingList.setOnItemClickListener(getOnItemClickListener());
@@ -196,7 +197,6 @@ public class ShoppingListFragment extends Fragment
         @Override
         protected void onPreExecute()
         {
-            pbListLoading = (ProgressBar)getView().findViewById(R.id.pbListLoading);
             pbListLoading.setVisibility(View.VISIBLE);
         }
 

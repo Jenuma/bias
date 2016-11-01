@@ -210,8 +210,6 @@ public class ShoppingListActivity extends BaseActivity
     // Private Methods                                                                 //
     // --------------------------------------------------------------------------------//
 
-
-
     /**
      * Initializes the new item form so that it listens for the return key and "done"
      * soft keyboard action; when triggered, it will add the item to the database
