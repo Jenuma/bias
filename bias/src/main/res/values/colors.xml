@@ -5,6 +5,8 @@
     <color name="colorPrimaryDark">#005180</color>
     <color name="colorAccent">#FFC120</color>
     <color name="colorDisabled">#D3D3D3</color>
+    <color name="colorSecondaryText">#757575</color>
+    <color name="colorDividerColor">#BDBDBD</color>
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>

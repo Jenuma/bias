@@ -1,6 +1,7 @@
 package io.whitegoldlabs.bias.features;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -60,6 +61,10 @@ public class MainActivity extends BaseActivity
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        int primaryColor = ContextCompat.getColor(getBaseContext(), R.color.colorPrimary);
+        int secondaryColor = ContextCompat.getColor(getBaseContext(), R.color.colorSecondaryText);
+        int accentColor = ContextCompat.getColor(getBaseContext(), R.color.colorAccent);
+
         result = new DrawerBuilder()
             .withAccountHeader(headerResult)
             .withActivity(MainActivity.this)
@@ -73,6 +78,8 @@ public class MainActivity extends BaseActivity
                         .withIdentifier(1)
                         .withIcon(FontAwesome.Icon.faw_home)
                         .withName("Home")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
                         .withSelectable(false),
                     new ExpandableDrawerItem()
                         .withIdentifier(2)
@@ -80,38 +87,53 @@ public class MainActivity extends BaseActivity
                         .withName("My List")
                         .withDescription("X of Y items crossed.")
                         .withSubItems(getListItems())
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
+                        .withDescriptionTextColor(secondaryColor)
                         .withSelectable(false),
-                    new ExpandableDrawerItem()
+                    new PrimaryDrawerItem()
                         .withIdentifier(3)
                         .withIcon(FontAwesome.Icon.faw_map_marker)
-                        .withName("Change Map")
-                        .withDescription("Walmart Supercenter - Store #853")
-                        .withSubItems(getListItems())
+                        .withName("Item Locator")
+                        .withDescription("Walmart Supercenter #853")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
+                        .withDescriptionTextColor(secondaryColor)
                         .withSelectable(false),
                     new PrimaryDrawerItem()
                         .withIdentifier(4)
                         .withIcon(FontAwesome.Icon.faw_users)
                         .withName("Manage Sharing")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
                         .withSelectable(false),
                     new PrimaryDrawerItem()
                         .withIdentifier(5)
                         .withIcon(FontAwesome.Icon.faw_shopping_cart)
                         .withName("Edit Cart")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
                         .withSelectable(false),
                     new PrimaryDrawerItem()
                         .withIdentifier(6)
                         .withIcon(FontAwesome.Icon.faw_map)
                         .withName("Edit Map")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
                         .withSelectable(false),
                     new PrimaryDrawerItem()
                         .withIdentifier(7)
                         .withIcon(FontAwesome.Icon.faw_cog)
                         .withName("Settings")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
                         .withSelectable(false),
                     new PrimaryDrawerItem()
                         .withIdentifier(8)
                         .withIcon(FontAwesome.Icon.faw_sign_out)
                         .withName("Sign Out")
+                        .withTextColor(primaryColor)
+                        .withIconColor(accentColor)
                         .withSelectable(false)
                 )
             .withSelectedItem(-1)
