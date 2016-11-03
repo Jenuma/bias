@@ -27,22 +27,18 @@ import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.common.ItemAdapter;
 import io.whitegoldlabs.bias.models.Item;
 
-public class ShoppingListFragment extends Fragment
+public class CartFragment extends Fragment
 {
     // Fields -------------------------------------------------------------------------//
+    private static final String TAG = "[CartFragment]";                                //
     private DatabaseReference db;                                                      //
-                                                                                       //
     private ProgressBar pbListLoading;                                                 //
-                                                                                       //
     private ArrayAdapter adapter;                                                      //
-    ArrayList<Item> items;                                                             //
-                                                                                       //
     int latestId;                                                                      //
-                                                                                       //
-    private static final String TAG = "[ShoppingListFragment]";                        //
+    ArrayList<Item> items;                                                             //
     // --------------------------------------------------------------------------------//
 
-    public ShoppingListFragment() {}
+    public CartFragment() {}
 
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -66,7 +62,7 @@ public class ShoppingListFragment extends Fragment
         Bundle savedInstanceState
     )
     {
-        View view = inflater.inflate(R.layout.fragment_shopping_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_cart, container, false);
 
         ListView lvShoppingList = (ListView)view.findViewById(R.id.lvShoppingList);
         pbListLoading = (ProgressBar)view.findViewById(R.id.pbListLoading);
@@ -78,9 +74,9 @@ public class ShoppingListFragment extends Fragment
         return view;
     }
 
-    public static ShoppingListFragment newInstance(String connectionString)
+    public static CartFragment newInstance(String connectionString)
     {
-        ShoppingListFragment frag = new ShoppingListFragment();
+        CartFragment frag = new CartFragment();
         Bundle args = new Bundle();
         args.putString("connectionString", connectionString);
         frag.setArguments(args);
@@ -176,7 +172,7 @@ public class ShoppingListFragment extends Fragment
             {
                 Log.d(TAG, "Notified of database change...");
 
-                new ShoppingListFragment.DataChangeThread().execute(dataSnapshot);
+                new CartFragment.DataChangeThread().execute(dataSnapshot);
             }
 
             @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -21,6 +22,7 @@ import static com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.whitegoldlabs.bias.R;
+import io.whitegoldlabs.bias.common.DrawerBuilder;
 
 /**
  * Acts as a repository for all functionality shared between sub-activities.
@@ -113,12 +115,12 @@ public abstract class BaseActivity extends AppCompatActivity
         {
             case "MainActivity":
                 break;
-            case "ShoppingListActivity":
+            case "EditCartActivity":
                 MenuItem goToListItem = menu.findItem(R.id.action_go_to_list);
                 goToListItem.setVisible(false);
 
                 break;
-            case "TestLayoutActivity":
+            case "ItemLocatorActivity":
                 MenuItem goToLayoutItem = menu.findItem(R.id.action_go_to_layout);
                 goToLayoutItem.setVisible(false);
 
@@ -165,6 +167,13 @@ public abstract class BaseActivity extends AppCompatActivity
     // --------------------------------------------------------------------------------//
     // Protected Methods                                                               //
     // --------------------------------------------------------------------------------//
+
+    protected void initDrawer() {
+        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        DrawerBuilder.build(this, toolbar);
+    }
 
     /**
      * Initializes the authentication state listener which will subsequently begin
@@ -217,9 +226,9 @@ public abstract class BaseActivity extends AppCompatActivity
      */
     private void goToList()
     {
-        Log.d(TAG, "Switching to ShoppingListActivity...");
+        Log.d(TAG, "Switching to EditCartActivity...");
 
-        Intent intent = new Intent(BaseActivity.this, ShoppingListActivity.class);
+        Intent intent = new Intent(BaseActivity.this, EditCartActivity.class);
         startActivity(intent);
     }
 
@@ -228,9 +237,9 @@ public abstract class BaseActivity extends AppCompatActivity
      */
     private void goToLayout()
     {
-        Log.d(TAG, "Switching to TestLayoutActivity...");
+        Log.d(TAG, "Switching to ItemLocatorActivity...");
 
-        Intent intent = new Intent(BaseActivity.this, TestLayoutActivity.class);
+        Intent intent = new Intent(BaseActivity.this, ItemLocatorActivity.class);
         startActivity(intent);
     }
 

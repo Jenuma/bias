@@ -32,21 +32,16 @@ import io.whitegoldlabs.bias.models.Item;
  *
  * @author Clifton Roberts
  */
-public class ShoppingListActivity extends BaseActivity
+public class EditCartActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
-    private ShoppingListFragment frag;                                                             //
-                                                                                       //
+    private CartFragment frag;                                                         //
     private DatabaseReference db;                                                      //
-                                                                                       //
     private EditText editItem;                                                         //
-                                                                                       //
     private CompletionListener completionListener;                                     //
-                                                                                       //
     private Item selectedItem;                                                         //
-                                                                                       //
     private static final int MAX_CHARS = 35;                                           //
-    private static final String TAG = "[ShoppingListActivity]";                        //
+    private static final String TAG = "[EditCartActivity]";                            //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -58,18 +53,19 @@ public class ShoppingListActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Log.d(TAG, "Creating ShoppingListActivity...");
+        Log.d(TAG, "Creating EditCartActivity...");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_shopping_list);
+        setContentView(R.layout.activity_edit_cart);
 
+        initDrawer();
         initItemForm();
 
         String connectionString = BuildConfig.DB_URL;
         connectToDatabase(connectionString);
 
         //TODO: Organize this
-        frag = ShoppingListFragment.newInstance(connectionString);
+        frag = CartFragment.newInstance(connectionString);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -78,7 +74,7 @@ public class ShoppingListActivity extends BaseActivity
 
         initAuth();
 
-        Log.d(TAG, "ShoppingListActivity created.");
+        Log.d(TAG, "EditCartActivity created.");
     }
 
     // --------------------------------------------------------------------------------//

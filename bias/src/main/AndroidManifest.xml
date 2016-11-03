@@ -22,10 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".features.ShoppingListActivity" />
+        <activity android:name=".features.EditCartActivity" />
 
         <activity
-            android:name=".features.TestLayoutActivity"
+            android:name=".features.ItemLocatorActivity"
             android:screenOrientation="portrait"
             >
         </activity>

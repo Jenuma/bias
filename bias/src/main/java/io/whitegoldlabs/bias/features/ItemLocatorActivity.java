@@ -13,10 +13,10 @@ import io.whitegoldlabs.bias.R;
  *
  * @author Clifton Roberts
  */
-public class TestLayoutActivity extends BaseActivity
+public class ItemLocatorActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
-    private static final String TAG = "[TestLayoutActivity]";                          //
+    private static final String TAG = "[ItemLocatorActivity]";                          //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -27,14 +27,15 @@ public class TestLayoutActivity extends BaseActivity
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Log.d(TAG, "Creating TestLayoutActivity...");
+        Log.d(TAG, "Creating ItemLocatorActivity...");
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_test_layout);
+        setContentView(R.layout.activity_item_locator);
 
-        super.initAuth();
+        initDrawer();
+        initAuth();
 
-        Log.d(TAG, "TestLayoutActivity created.");
+        Log.d(TAG, "ItemLocatorActivity created.");
     }
 
     // --------------------------------------------------------------------------------//

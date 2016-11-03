@@ -1,24 +1,9 @@
 package io.whitegoldlabs.bias.features;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
-import com.mikepenz.materialdrawer.AccountHeader;
-import com.mikepenz.materialdrawer.AccountHeaderBuilder;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.whitegoldlabs.bias.R;
 
@@ -31,8 +16,6 @@ public class MainActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
     private static final String TAG = "[MainActivity]";                                //
-
-    private Drawer result;
     // --------------------------------------------------------------------------------//
 
     /**
@@ -48,122 +31,10 @@ public class MainActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //TODO: Organize this
-        AccountHeader headerResult = new AccountHeaderBuilder()
-            .withActivity(MainActivity.this)
-            .withHeaderBackground(R.color.colorPrimary)
-            .addProfiles
-                (
-                    new ProfileDrawerItem().withEmail("jenuma@live.com")
-                )
-            .build();
-
-        Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        int primaryColor = ContextCompat.getColor(getBaseContext(), R.color.colorPrimary);
-        int secondaryColor = ContextCompat.getColor(getBaseContext(), R.color.colorSecondaryText);
-        int accentColor = ContextCompat.getColor(getBaseContext(), R.color.colorAccent);
-
-        result = new DrawerBuilder()
-            .withAccountHeader(headerResult)
-            .withActivity(MainActivity.this)
-            .withToolbar(toolbar)
-            .addDrawerItems
-                (
-                    //TODO: Figure out how to get list fragment in here
-                        //TODO: Extend FastAdapter?
-                        //TODO: .withCustomView?
-                    new PrimaryDrawerItem()
-                        .withIdentifier(1)
-                        .withIcon(FontAwesome.Icon.faw_home)
-                        .withName("Home")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withSelectable(false),
-                    new ExpandableDrawerItem()
-                        .withIdentifier(2)
-                        .withIcon(FontAwesome.Icon.faw_list)
-                        .withName("My List")
-                        .withDescription("X of Y items crossed.")
-                        .withSubItems(getListItems())
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withDescriptionTextColor(secondaryColor)
-                        .withSelectable(false),
-                    new PrimaryDrawerItem()
-                        .withIdentifier(3)
-                        .withIcon(FontAwesome.Icon.faw_map_marker)
-                        .withName("Item Locator")
-                        .withDescription("Walmart Supercenter #853")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withDescriptionTextColor(secondaryColor)
-                        .withSelectable(false),
-                    new PrimaryDrawerItem()
-                        .withIdentifier(4)
-                        .withIcon(FontAwesome.Icon.faw_users)
-                        .withName("Manage Sharing")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withSelectable(false),
-                    new PrimaryDrawerItem()
-                        .withIdentifier(5)
-                        .withIcon(FontAwesome.Icon.faw_shopping_cart)
-                        .withName("Edit Cart")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withSelectable(false),
-                    new PrimaryDrawerItem()
-                        .withIdentifier(6)
-                        .withIcon(FontAwesome.Icon.faw_map)
-                        .withName("Edit Map")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withSelectable(false),
-                    new PrimaryDrawerItem()
-                        .withIdentifier(7)
-                        .withIcon(FontAwesome.Icon.faw_cog)
-                        .withName("Settings")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withSelectable(false),
-                    new PrimaryDrawerItem()
-                        .withIdentifier(8)
-                        .withIcon(FontAwesome.Icon.faw_sign_out)
-                        .withName("Sign Out")
-                        .withTextColor(primaryColor)
-                        .withIconColor(accentColor)
-                        .withSelectable(false)
-                )
-            .withSelectedItem(-1)
-            .withCloseOnClick(false)
-            .build();
-
-        super.initAuth();
+        initDrawer();
+        initAuth();
 
         Log.d(TAG, "MainActivity created.");
-    }
-
-    private List<IDrawerItem> getListItems()
-    {
-        List<IDrawerItem> subItems = new ArrayList<>();
-
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem()
-            .withName("Item 1")
-            .withSelectable(false);
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem()
-            .withName("Item 2")
-            .withSelectable(false);
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem()
-            .withName("Item 3")
-            .withSelectable(false);
-
-        subItems.add(item1);
-        subItems.add(item2);
-        subItems.add(item3);
-
-        return subItems;
     }
 
     // --------------------------------------------------------------------------------//
