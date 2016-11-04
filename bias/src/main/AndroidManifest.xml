@@ -23,14 +23,12 @@
         </activity>
 
         <activity android:name=".features.EditCartActivity" />
+        <activity android:name=".features.ItemLocatorActivity"/>
 
         <activity
-            android:name=".features.ItemLocatorActivity"
-            android:screenOrientation="portrait"
-            >
+            android:name=".features.LoginActivity"
+            android:noHistory="true">
         </activity>
-
-        <activity android:name=".features.LoginActivity"/>
     </application>
 
 </manifest>

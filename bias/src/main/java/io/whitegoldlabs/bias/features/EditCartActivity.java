@@ -40,6 +40,7 @@ public class EditCartActivity extends BaseActivity
     private EditText editItem;                                                         //
     private CompletionListener completionListener;                                     //
     private Item selectedItem;                                                         //
+                                                                                       //
     private static final int MAX_CHARS = 35;                                           //
     private static final String TAG = "[EditCartActivity]";                            //
     // --------------------------------------------------------------------------------//
@@ -219,7 +220,6 @@ public class EditCartActivity extends BaseActivity
 
         editItem = (EditText)findViewById(R.id.editItem);
         editItem.setOnEditorActionListener(getOnEditorActionListener(btnAddItem));
-
         Log.d(TAG, "New item form initialized.");
     }
 

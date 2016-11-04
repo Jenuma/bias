@@ -8,13 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
+import static android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +21,7 @@ import static com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
 
 import io.whitegoldlabs.bias.R;
-import io.whitegoldlabs.bias.common.DrawerBuilder;
+import io.whitegoldlabs.bias.common.DrawerWrapper;
 
 /**
  * Acts as a repository for all functionality shared between sub-activities.
@@ -92,87 +91,17 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     // --------------------------------------------------------------------------------//
-    // Overridden Events                                                               //
-    // --------------------------------------------------------------------------------//
-
-    /**
-     * Inflates the action bar overflow menu and hides certain menu items based on which
-     * sub-activity it is inflating for.
-     *
-     * @param menu The menu to be inflated.
-     * @return true if the menu was inflated as expected, false otherwise.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        Log.d(TAG, "Creating action bar overflow menu.");
-
-        super.onCreateOptionsMenu(menu);
-
-        getMenuInflater().inflate(R.menu.menu_action_bar, menu);
-
-        switch(this.getClass().getSimpleName())
-        {
-            case "MainActivity":
-                break;
-            case "EditCartActivity":
-                MenuItem goToListItem = menu.findItem(R.id.action_go_to_list);
-                goToListItem.setVisible(false);
-
-                break;
-            case "ItemLocatorActivity":
-                MenuItem goToLayoutItem = menu.findItem(R.id.action_go_to_layout);
-                goToLayoutItem.setVisible(false);
-
-                break;
-            default:
-                return false;
-        }
-        Log.d(TAG, "Action bar overflow menu created.");
-        return true;
-    }
-
-    /**
-     * Handles which action to take based on what menu item was selected.
-     *
-     * @param menuItem The menu item selected by the user.
-     * @return true if the event was handled as expected, false otherwise.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        Log.d(TAG, "Action bar overflow menu item selected.");
-
-        super.onOptionsItemSelected(menuItem);
-
-        switch(menuItem.getItemId())
-        {
-            case R.id.action_go_to_list:
-                goToList();
-                return true;
-            case R.id.action_go_to_layout:
-                goToLayout();
-                return true;
-            case R.id.action_sign_out:
-                signOut();
-                return true;
-            default:
-                String error = "Invalid menu action!";
-                Log.e(TAG, error);
-                toast(error);
-                return false;
-        }
-    }
-
-    // --------------------------------------------------------------------------------//
     // Protected Methods                                                               //
     // --------------------------------------------------------------------------------//
 
+    /**
+     * Builds the navigation drawer for the calling activity.
+     */
     protected void initDrawer() {
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerBuilder.build(this, toolbar);
+        DrawerWrapper.build(this, toolbar);
     }
 
     /**
@@ -222,28 +151,6 @@ public abstract class BaseActivity extends AppCompatActivity
     // --------------------------------------------------------------------------------//
 
     /**
-     * Brings the user to the shopping list page.
-     */
-    private void goToList()
-    {
-        Log.d(TAG, "Switching to EditCartActivity...");
-
-        Intent intent = new Intent(BaseActivity.this, EditCartActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Brings the user to the test layout page.
-     */
-    private void goToLayout()
-    {
-        Log.d(TAG, "Switching to ItemLocatorActivity...");
-
-        Intent intent = new Intent(BaseActivity.this, ItemLocatorActivity.class);
-        startActivity(intent);
-    }
-
-    /**
      * Signs the user out of this Firebase instance; the user will be redirected to the
      * login page subsequently.
      */
@@ -267,12 +174,12 @@ public abstract class BaseActivity extends AppCompatActivity
      * @param button The Button to click after hitting "done" or "return".
      * @return The new OnEditorActionListener.
      */
-    protected TextView.OnEditorActionListener getOnEditorActionListener
+    protected OnEditorActionListener getOnEditorActionListener
     (
         final Button button
     )
     {
-        return new TextView.OnEditorActionListener()
+        return new OnEditorActionListener()
         {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
@@ -298,6 +205,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 }
 
                 hideSoftKeyboard();
+                findViewById(android.R.id.content).requestFocus();
                 return false;
             }
         };

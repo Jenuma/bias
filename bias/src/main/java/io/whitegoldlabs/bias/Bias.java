@@ -18,5 +18,9 @@ public class Bias extends android.app.Application
         super.onCreate();
 
         FirebaseApp.initializeApp(this);
+
+        //TODO: Add documentation to everything missing it
+        //TODO: Add log statements where needed
+        //TODO: Change toolbar title to reflect current activity
     }
 }
