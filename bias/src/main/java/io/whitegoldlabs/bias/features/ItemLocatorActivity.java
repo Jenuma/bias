@@ -2,8 +2,6 @@ package io.whitegoldlabs.bias.features;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import io.whitegoldlabs.bias.R;
 
@@ -16,7 +14,7 @@ import io.whitegoldlabs.bias.R;
 public class ItemLocatorActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
-    private static final String TAG = "[ItemLocatorActivity]";                          //
+    private static final String TAG = "[ItemLocatorActivity]";                         //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -36,34 +34,5 @@ public class ItemLocatorActivity extends BaseActivity
         initAuth();
 
         Log.d(TAG, "ItemLocatorActivity created.");
-    }
-
-    // --------------------------------------------------------------------------------//
-    // Overridden Events                                                               //
-    // --------------------------------------------------------------------------------//
-
-    /**
-     * Inflates the action bar overflow menu for this activity.
-     *
-     * @param menu The menu to be inflated.
-     * @return true if the menu was inflated as expected, false otherwise.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     * Handles which action to take based on what menu item was selected.
-     *
-     * @param menuItem The menu item selected by the user.
-     * @return true if the event was handled as expected, false otherwise.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        return super.onOptionsItemSelected(menuItem);
-
     }
 }

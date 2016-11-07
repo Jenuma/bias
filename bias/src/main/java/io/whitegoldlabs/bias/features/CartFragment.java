@@ -38,8 +38,10 @@ public class CartFragment extends Fragment
     ArrayList<Item> items;                                                             //
     // --------------------------------------------------------------------------------//
 
+    //TODO: Document this
     public CartFragment() {}
 
+    //TODO: Document this
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -54,6 +56,7 @@ public class CartFragment extends Fragment
         db.child("items").addValueEventListener(getValueEventListener());
     }
 
+    //TODO: Document this
     @Override
     public View onCreateView
     (
@@ -74,6 +77,7 @@ public class CartFragment extends Fragment
         return view;
     }
 
+    //TODO: Documentation
     public static CartFragment newInstance(String connectionString)
     {
         CartFragment frag = new CartFragment();
@@ -84,6 +88,7 @@ public class CartFragment extends Fragment
         return frag;
     }
 
+    //TODO: What are these? They appeared on their own... document them or remove them
     @Override
     public void onAttach(Context context)
     {

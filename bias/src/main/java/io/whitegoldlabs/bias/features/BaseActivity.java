@@ -147,23 +147,6 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     // --------------------------------------------------------------------------------//
-    // Private Methods                                                                 //
-    // --------------------------------------------------------------------------------//
-
-    /**
-     * Signs the user out of this Firebase instance; the user will be redirected to the
-     * login page subsequently.
-     */
-    private void signOut()
-    {
-        Log.d(TAG, "Signing out user...");
-
-        auth.signOut();
-
-        Log.d(TAG, "User signed out.");
-    }
-
-    // --------------------------------------------------------------------------------//
     // Listeners                                                                       //
     // --------------------------------------------------------------------------------//
 

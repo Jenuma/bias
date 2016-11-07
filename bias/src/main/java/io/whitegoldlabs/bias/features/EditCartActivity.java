@@ -5,7 +5,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -83,30 +82,6 @@ public class EditCartActivity extends BaseActivity
     // --------------------------------------------------------------------------------//
 
     /**
-     * Inflates the action bar overflow menu for this activity.
-     *
-     * @param menu The menu to be inflated.
-     * @return true if the menu was inflated as expected, false otherwise.
-     */
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    /**
-     * Handles which action to take based on what menu item was selected.
-     *
-     * @param menuItem The menu item selected by the user.
-     * @return true if the event was handled as expected, false otherwise.
-     */
-    @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem)
-    {
-        return super.onOptionsItemSelected(menuItem);
-    }
-
-    /**
      * Listens for the creation of the item list's context menu, gets the selected item,
      * and inflates the menu.
      *
@@ -161,6 +136,7 @@ public class EditCartActivity extends BaseActivity
         {
             Log.d(TAG, "User adding new item...");
 
+            newName = newName.substring(0, 1).toUpperCase() + newName.substring(1);
             String newId = Integer.toString(frag.latestId + 1);
 
             db.child("items")
