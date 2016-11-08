@@ -24,10 +24,12 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.whitegoldlabs.bias.Bias;
 import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.features.EditCartActivity;
 import io.whitegoldlabs.bias.features.ItemLocatorActivity;
 import io.whitegoldlabs.bias.features.MainActivity;
+import io.whitegoldlabs.bias.models.Item;
 
 public class DrawerWrapper
 {
@@ -50,7 +52,7 @@ public class DrawerWrapper
      * @param activity The activity building the drawer.
      * @param toolbar The toolbar of the activity that needs the hamburger button.
      */
-    public static void build(Activity activity, Toolbar toolbar)
+    public static Drawer build(Activity activity, Toolbar toolbar)
     {
         AccountHeader headerResult = new AccountHeaderBuilder()
             .withActivity(activity)
@@ -67,7 +69,7 @@ public class DrawerWrapper
         secondaryColor = ContextCompat.getColor(context, R.color.colorSecondaryText);
         accentColor = ContextCompat.getColor(context, R.color.colorAccent);
 
-        new DrawerBuilder()
+        return new DrawerBuilder()
             .withAccountHeader(headerResult)
             .withActivity(activity)
             .withToolbar(toolbar)
@@ -85,7 +87,7 @@ public class DrawerWrapper
                     .withIcon(FontAwesome.Icon.faw_list)
                     .withName("My List")
                     .withDescription("X of Y items crossed.")
-                    .withSubItems(getListItems())
+                    .withSubItems(getListItems(activity))
                     .withTextColor(primaryColor)
                     .withIconColor(accentColor)
                     .withDescriptionTextColor(secondaryColor),
@@ -247,23 +249,20 @@ public class DrawerWrapper
     }
 
     //TODO: Replace this with actual cart items.
-    private static List<IDrawerItem> getListItems()
+    private static List<IDrawerItem> getListItems(Activity activity)
     {
+        ArrayList<Item> items = ((Bias)activity.getApplication()).getItems();
         List<IDrawerItem> subItems = new ArrayList<>();
 
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem()
-            .withName("Item 1")
-            .withSelectable(false);
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem()
-            .withName("Item 2")
-            .withSelectable(false);
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem()
-            .withName("Item 3")
-            .withSelectable(false);
-
-        subItems.add(item1);
-        subItems.add(item2);
-        subItems.add(item3);
+        for(Item item : items)
+        {
+            subItems.add
+            (
+                new PrimaryDrawerItem()
+                    .withName(item.getName())
+                    .withSelectable(false)
+            );
+        }
 
         return subItems;
     }

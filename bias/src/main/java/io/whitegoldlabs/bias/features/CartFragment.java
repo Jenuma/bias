@@ -2,7 +2,6 @@ package io.whitegoldlabs.bias.features;
 
 import android.content.Context;
 import android.graphics.Paint;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,23 +14,20 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import io.whitegoldlabs.bias.Bias;
 import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.common.ItemAdapter;
+import io.whitegoldlabs.bias.common.IObserver;
 import io.whitegoldlabs.bias.models.Item;
 
-public class CartFragment extends Fragment
+public class CartFragment extends Fragment implements IObserver
 {
     // Fields -------------------------------------------------------------------------//
     private static final String TAG = "[CartFragment]";                                //
-    private DatabaseReference db;                                                      //
     private ProgressBar pbListLoading;                                                 //
     private ArrayAdapter adapter;                                                      //
     int latestId;                                                                      //
@@ -47,16 +43,13 @@ public class CartFragment extends Fragment
     {
         super.onCreate(savedInstanceState);
 
-        Bundle args = getArguments();
-        connectToDatabase(args.getString("connectionString", ""));
-
-        items = new ArrayList<>();
+        Bias app = ((Bias)getActivity().getApplication());
+        app.addObserver(this);
+        items = app.getItems();
         adapter = new ItemAdapter(items, getContext());
-
-        db.child("items").addValueEventListener(getValueEventListener());
     }
 
-    //TODO: Document this
+    //TODO: Document this.
     @Override
     public View onCreateView
     (
@@ -77,7 +70,7 @@ public class CartFragment extends Fragment
         return view;
     }
 
-    //TODO: Documentation
+    //TODO: Can probably remove this... otherwise document
     public static CartFragment newInstance(String connectionString)
     {
         CartFragment frag = new CartFragment();
@@ -101,6 +94,13 @@ public class CartFragment extends Fragment
         super.onDetach();
     }
 
+    @Override
+    public void update(ArrayList<Item> newItems)
+    {
+        items = newItems;
+        adapter.notifyDataSetChanged();
+    }
+
     /**
      * Toggles the "crossed" state of the item in the indicated position of the list.
      *
@@ -109,8 +109,9 @@ public class CartFragment extends Fragment
      */
     private void crossItem(int position, View view)
     {
-        Log.d(TAG, "User crossing item off the list...");
+        Log.d(TAG, "User un/crossing item...");
 
+        DatabaseReference db = ((Bias)getActivity().getApplication()).getDb();
         Item item = items.get(position);
 
         db.child("items")
@@ -123,21 +124,7 @@ public class CartFragment extends Fragment
             ((TextView)view).getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG
         );
 
-        Log.d(TAG, "Item crossed off the list successfully.");
-    }
-
-    /**
-     * Connects this activity to Firebase.
-     */
-    private void connectToDatabase(String url)
-    {
-        Log.d(TAG, "Connecting to Firebase...");
-
-        db = FirebaseDatabase
-                .getInstance()
-                .getReferenceFromUrl(url);
-
-        Log.d(TAG, "Connected to Firebase.");
+        Log.d(TAG, "Item un/crossed successfully.");
     }
 
     /**
@@ -161,72 +148,5 @@ public class CartFragment extends Fragment
                 crossItem(position, view);
             }
         };
-    }
-
-    /**
-     * Creates a new ValueEventListener for database changes.
-     *
-     * @return The new ValueEventListener.
-     */
-    private ValueEventListener getValueEventListener()
-    {
-        return new ValueEventListener()
-        {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                Log.d(TAG, "Notified of database change...");
-
-                new CartFragment.DataChangeThread().execute(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error)
-            {
-                Log.e(TAG, "Database read failed! Details: " + error);
-                //TODO: toast("Database read failed!");
-            }
-        };
-    }
-
-    /**
-     * Worker thread for getting the shopping list items from the database. Starts a
-     * progress bar in case retrieval takes more than a second and removes it when done.
-     */
-    private class DataChangeThread extends AsyncTask<DataSnapshot, Void, Void>
-    {
-        @Override
-        protected void onPreExecute()
-        {
-            pbListLoading.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected Void doInBackground(DataSnapshot... params)
-        {
-            items.clear();
-
-            Log.d(TAG, "DataChangeTask => Getting shopping list items from database...");
-
-            for(DataSnapshot snapshot : params[0].getChildren())
-            {
-                Item item = snapshot.getValue(Item.class);
-                item.setId(Integer.parseInt(snapshot.getKey()));
-
-                items.add(item);
-
-                latestId = item.getId();
-            }
-
-            Log.d(TAG, "DataChangeTask => Shopping list items retrieved successfully.");
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result)
-        {
-            pbListLoading.setVisibility(View.GONE);
-            adapter.notifyDataSetChanged();
-        }
     }
 }

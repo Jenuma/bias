@@ -30,8 +30,8 @@ public class ItemLocatorActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_item_locator);
 
-        initDrawer();
         initAuth();
+        initDrawer();
 
         Log.d(TAG, "ItemLocatorActivity created.");
     }

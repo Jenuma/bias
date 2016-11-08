@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import static com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikepenz.materialdrawer.Drawer;
 
 import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.common.DrawerWrapper;
@@ -33,6 +34,8 @@ public abstract class BaseActivity extends AppCompatActivity
     // Fields -------------------------------------------------------------------------//
     private FirebaseAuth auth;                                                         //
     private FirebaseAuth.AuthStateListener authListener;                               //
+                                                                                       //
+    protected Drawer drawer;                                                           //
                                                                                        //
     private static final String TAG = "[BaseActivity]";                                //
     // --------------------------------------------------------------------------------//
@@ -101,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerWrapper.build(this, toolbar);
+        drawer = DrawerWrapper.build(this, toolbar);
     }
 
     /**

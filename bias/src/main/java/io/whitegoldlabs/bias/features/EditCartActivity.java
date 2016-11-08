@@ -17,9 +17,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import static com.google.firebase.database.DatabaseReference.CompletionListener;
 import com.google.firebase.database.FirebaseDatabase;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
+import java.util.ArrayList;
+
+import io.whitegoldlabs.bias.Bias;
 import io.whitegoldlabs.bias.BuildConfig;
 import io.whitegoldlabs.bias.R;
+import io.whitegoldlabs.bias.common.IObserver;
 import io.whitegoldlabs.bias.models.Item;
 
 /**
@@ -31,7 +36,7 @@ import io.whitegoldlabs.bias.models.Item;
  *
  * @author Clifton Roberts
  */
-public class EditCartActivity extends BaseActivity
+public class EditCartActivity extends BaseActivity implements IObserver
 {
     // Fields -------------------------------------------------------------------------//
     private CartFragment frag;                                                         //
@@ -57,6 +62,9 @@ public class EditCartActivity extends BaseActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_cart);
+
+        Bias app = ((Bias)getApplication());
+        app.addObserver(this);
 
         initDrawer();
         initItemForm();
@@ -107,6 +115,30 @@ public class EditCartActivity extends BaseActivity
         inflater.inflate(R.menu.menu_shopping_list, menu);
 
         Log.d(TAG, "Context menu created.");
+    }
+
+    // --------------------------------------------------------------------------------//
+    // Interface Functions                                                             //
+    // --------------------------------------------------------------------------------//
+
+    @Override
+    public void update(ArrayList<Item> newItems)
+    {
+        ArrayList<PrimaryDrawerItem> items = new ArrayList<>();
+
+        for(Item item : newItems)
+        {
+            items.add
+            (
+                new PrimaryDrawerItem()
+                    .withName(item.getName())
+                    .withSelectable(false)
+            );
+        }
+
+        //TODO: I don't like this 2 being hardcoded here.
+        drawer.getDrawerItem(2).withSubItems(items);
+        drawer.getAdapter().notifyAdapterSubItemsChanged(2);
     }
 
     // --------------------------------------------------------------------------------//
