@@ -157,15 +157,22 @@ public class DrawerWrapper
         String desc
     )
     {
-        return new PrimaryDrawerItem()
+        PrimaryDrawerItem result = new PrimaryDrawerItem()
             .withIdentifier(id)
             .withIcon(icon)
             .withIconColor(accentColor)
             .withName(name)
             .withTextColor(primaryColor)
-            .withDescription(desc)
-            .withDescriptionTextColor(secondaryColor)
             .withSelectable(false);
+
+        if(desc.length() > 0)
+        {
+            result
+                .withDescription(desc)
+                .withDescriptionTextColor(secondaryColor);
+        }
+
+        return result;
     }
 
     /**
@@ -248,7 +255,7 @@ public class DrawerWrapper
         };
     }
 
-    //TODO: Replace this with actual cart items.
+    //TODO: Document this.
     private static List<IDrawerItem> getListItems(Activity activity)
     {
         ArrayList<Item> items = ((Bias)activity.getApplication()).getItems();

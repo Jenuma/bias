@@ -2,8 +2,6 @@ package io.whitegoldlabs.bias.features;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import io.whitegoldlabs.bias.R;
 
@@ -35,5 +33,14 @@ public class MainActivity extends BaseActivity
         initDrawer();
 
         Log.d(TAG, "MainActivity created.");
+    }
+
+    //TODO: Document this.
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        app.addObserver(this);
     }
 }

@@ -35,4 +35,14 @@ public class ItemLocatorActivity extends BaseActivity
 
         Log.d(TAG, "ItemLocatorActivity created.");
     }
+
+    //TODO: Document this.
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        app.addObserver(this);
+    }
+
 }

@@ -25,9 +25,8 @@ public class Bias extends android.app.Application
     // Fields -------------------------------------------------------------------------//
     private DatabaseReference db;                                                      //
                                                                                        //
-    private ArrayList<IObserver> observers;                                             //
+    private ArrayList<IObserver> observers;                                            //
     private ArrayList<Item> items;                                                     //
-    private int latestId;                                                              //
                                                                                        //
     private static final String TAG = "[BIAS]";                                        //
     // --------------------------------------------------------------------------------//
@@ -51,19 +50,25 @@ public class Bias extends android.app.Application
         //TODO: Add log statements where needed
         //TODO: Change toolbar title to reflect current activity
         //TODO: LOTS of code needs to be cleaned up after adding observer pattern
-        //TODO: Add removeObserver method and remove activities as they're destroyed
+        //TODO: Use/override CustomDrawerItem to set paint flags for crossing items
     }
 
     // Accessors ----------------------------------------------------------------------//
     public DatabaseReference getDb() {return db;}                                      //
     public ArrayList<Item> getItems() {return items;}                                  //
-    public int getLatestId() {return latestId;}                                        //
     // --------------------------------------------------------------------------------//
 
     //TODO: Document this.
     public void addObserver(IObserver observer)
     {
         observers.add(observer);
+        notifyObservers(items);
+    }
+
+    //TODO: Document this.
+    public void removeObserver(IObserver observer)
+    {
+        observers.remove(observer);
     }
 
     //TODO: Document this.
@@ -133,8 +138,6 @@ public class Bias extends android.app.Application
                 item.setId(Integer.parseInt(snapshot.getKey()));
 
                 items.add(item);
-
-                latestId = item.getId();
             }
 
             Log.d(TAG, "DataChangeTask => Shopping list items retrieved successfully.");
@@ -144,6 +147,7 @@ public class Bias extends android.app.Application
         @Override
         protected void onPostExecute(ArrayList<Item> result)
         {
+            items = result;
             notifyObservers(result);
         }
     }

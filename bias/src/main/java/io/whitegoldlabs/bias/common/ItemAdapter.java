@@ -38,6 +38,12 @@ public class ItemAdapter extends ArrayAdapter<Item>
         this.items = items;
     }
 
+    //TODO: Document this.
+    public void swapItems(ArrayList<Item> items)
+    {
+        this.items = items;
+    }
+
     /**
      * Facilitates view reuse and cleans up complicated code.
      */

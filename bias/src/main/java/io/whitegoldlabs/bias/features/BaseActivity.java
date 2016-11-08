@@ -20,18 +20,26 @@ import com.google.firebase.auth.FirebaseAuth;
 import static com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
+import java.util.ArrayList;
+
+import io.whitegoldlabs.bias.Bias;
 import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.common.DrawerWrapper;
+import io.whitegoldlabs.bias.common.IObserver;
+import io.whitegoldlabs.bias.models.Item;
 
 /**
  * Acts as a repository for all functionality shared between sub-activities.
  *
  * @author Clifton Roberts
  */
-public abstract class BaseActivity extends AppCompatActivity
+public abstract class BaseActivity extends AppCompatActivity implements IObserver
 {
     // Fields -------------------------------------------------------------------------//
+    protected Bias app;                                                                //
+                                                                                       //
     private FirebaseAuth auth;                                                         //
     private FirebaseAuth.AuthStateListener authListener;                               //
                                                                                        //
@@ -66,11 +74,21 @@ public abstract class BaseActivity extends AppCompatActivity
 
         if(!this.getClass().getSimpleName().equals("LoginActivity"))
         {
-            Log.d(TAG, "Starting auth state listener...");
+            app = ((Bias)getApplication());
 
             auth.addAuthStateListener(authListener);
+        }
+    }
 
-            Log.d(TAG, "Auth state listener started.");
+    //TODO: Document this.
+    @Override
+    public void onRestart()
+    {
+        super.onRestart();
+
+        if(drawer != null)
+        {
+            drawer.closeDrawer();
         }
     }
 
@@ -83,6 +101,11 @@ public abstract class BaseActivity extends AppCompatActivity
     {
         super.onStop();
 
+        if(app != null)
+        {
+            app.removeObserver(this);
+        }
+
         if(authListener != null)
         {
             Log.d(TAG, "Removing auth state listener...");
@@ -91,6 +114,27 @@ public abstract class BaseActivity extends AppCompatActivity
 
             Log.d(TAG, "Auth state listener removed.");
         }
+    }
+
+    //TODO: Document this.
+    @Override
+    public void update(ArrayList<Item> newItems)
+    {
+        ArrayList<PrimaryDrawerItem> items = new ArrayList<>();
+
+        for(Item item : newItems)
+        {
+            items.add
+            (
+                new PrimaryDrawerItem()
+                    .withName(item.getName())
+                    .withSelectable(false)
+            );
+        }
+
+        //TODO: I don't like this 2 being hardcoded here.
+        drawer.getDrawerItem(2).withSubItems(items);
+        drawer.getAdapter().notifyAdapterSubItemsChanged(2);
     }
 
     // --------------------------------------------------------------------------------//

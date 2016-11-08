@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,11 +25,12 @@ import io.whitegoldlabs.bias.models.Item;
 
 public class CartFragment extends Fragment implements IObserver
 {
+    //TODO: Get progress bar working or remove it.
     // Fields -------------------------------------------------------------------------//
     private static final String TAG = "[CartFragment]";                                //
     private ProgressBar pbListLoading;                                                 //
-    private ArrayAdapter adapter;                                                      //
-    int latestId;                                                                      //
+    private ItemAdapter adapter;                                                       //
+    int nextId;                                                                        //
     ArrayList<Item> items;                                                             //
     // --------------------------------------------------------------------------------//
 
@@ -43,8 +43,8 @@ public class CartFragment extends Fragment implements IObserver
     {
         super.onCreate(savedInstanceState);
 
+        //TODO: Remove these if not necessary...
         Bias app = ((Bias)getActivity().getApplication());
-        app.addObserver(this);
         items = app.getItems();
         adapter = new ItemAdapter(items, getContext());
     }
@@ -68,6 +68,15 @@ public class CartFragment extends Fragment implements IObserver
         registerForContextMenu(lvShoppingList);
 
         return view;
+    }
+
+    //TODO: Document this.
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        ((Bias)getActivity().getApplication()).addObserver(this);
     }
 
     //TODO: Can probably remove this... otherwise document
@@ -97,8 +106,23 @@ public class CartFragment extends Fragment implements IObserver
     @Override
     public void update(ArrayList<Item> newItems)
     {
-        items = newItems;
+        nextId = getNextId();
+
         adapter.notifyDataSetChanged();
+
+        Log.d(TAG, "Adapter notified of data set change.");
+    }
+
+    private int getNextId()
+    {
+        if(items.size() == 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return items.get(items.size() - 1).getId() + 1;
+        }
     }
 
     /**
@@ -138,12 +162,12 @@ public class CartFragment extends Fragment implements IObserver
         {
             @Override
             public void onItemClick
-                    (
-                            AdapterView<?> parent,
-                            View view,
-                            int position,
-                            long id
-                    )
+            (
+                AdapterView<?> parent,
+                View view,
+                int position,
+                long id
+            )
             {
                 crossItem(position, view);
             }

@@ -17,14 +17,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import static com.google.firebase.database.DatabaseReference.CompletionListener;
 import com.google.firebase.database.FirebaseDatabase;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import io.whitegoldlabs.bias.Bias;
 import io.whitegoldlabs.bias.BuildConfig;
 import io.whitegoldlabs.bias.R;
-import io.whitegoldlabs.bias.common.IObserver;
 import io.whitegoldlabs.bias.models.Item;
 
 /**
@@ -36,7 +34,7 @@ import io.whitegoldlabs.bias.models.Item;
  *
  * @author Clifton Roberts
  */
-public class EditCartActivity extends BaseActivity implements IObserver
+public class EditCartActivity extends BaseActivity
 {
     // Fields -------------------------------------------------------------------------//
     private CartFragment frag;                                                         //
@@ -63,16 +61,13 @@ public class EditCartActivity extends BaseActivity implements IObserver
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_cart);
 
-        Bias app = ((Bias)getApplication());
-        app.addObserver(this);
-
         initDrawer();
         initItemForm();
 
         String connectionString = BuildConfig.DB_URL;
         connectToDatabase(connectionString);
 
-        //TODO: Organize this
+        //TODO: Abstract this method in general
         frag = CartFragment.newInstance(connectionString);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -83,6 +78,15 @@ public class EditCartActivity extends BaseActivity implements IObserver
         initAuth();
 
         Log.d(TAG, "EditCartActivity created.");
+    }
+
+    //TODO: Document this.
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+
+        app.addObserver(this);
     }
 
     // --------------------------------------------------------------------------------//
@@ -118,30 +122,6 @@ public class EditCartActivity extends BaseActivity implements IObserver
     }
 
     // --------------------------------------------------------------------------------//
-    // Interface Functions                                                             //
-    // --------------------------------------------------------------------------------//
-
-    @Override
-    public void update(ArrayList<Item> newItems)
-    {
-        ArrayList<PrimaryDrawerItem> items = new ArrayList<>();
-
-        for(Item item : newItems)
-        {
-            items.add
-            (
-                new PrimaryDrawerItem()
-                    .withName(item.getName())
-                    .withSelectable(false)
-            );
-        }
-
-        //TODO: I don't like this 2 being hardcoded here.
-        drawer.getDrawerItem(2).withSubItems(items);
-        drawer.getAdapter().notifyAdapterSubItemsChanged(2);
-    }
-
-    // --------------------------------------------------------------------------------//
     // Behavior                                                                        //
     // --------------------------------------------------------------------------------//
 
@@ -160,7 +140,7 @@ public class EditCartActivity extends BaseActivity implements IObserver
         {
             Log.d(TAG, "User tried to create new item with too long of a name.");
 
-            super.toast("Item cannot contain more than " + MAX_CHARS + " characters.");
+            toast("Item cannot contain more than " + MAX_CHARS + " characters.");
             return;
         }
 
@@ -169,16 +149,12 @@ public class EditCartActivity extends BaseActivity implements IObserver
             Log.d(TAG, "User adding new item...");
 
             newName = newName.substring(0, 1).toUpperCase() + newName.substring(1);
-            String newId = Integer.toString(frag.latestId + 1);
+            String newId = Integer.toString(frag.nextId);
 
-            db.child("items")
-                .child(newId)
-                .child("name")
-                .setValue(newName, getCompletionListener());
-            db.child("items")
-                .child(newId)
-                .child("crossed")
-                .setValue(false, getCompletionListener());
+            Map<String, Object> newItem = new HashMap<>();
+            newItem.put("/items/" + newId + "/name", newName);
+            newItem.put("/items/" + newId + "/crossed", false);
+            db.updateChildren(newItem, getCompletionListener());
 
             editItem.setText("");
         }
@@ -208,7 +184,6 @@ public class EditCartActivity extends BaseActivity implements IObserver
         Log.d(TAG, "User removing all items...");
 
         db.child("items").removeValue(getCompletionListener());
-        frag.latestId = -1;
     }
 
     // --------------------------------------------------------------------------------//
