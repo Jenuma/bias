@@ -65,7 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
         DRAWER_ITEM_ID_MAP.put("SignOut", 8);
     }
 
-    private static final String TAG = "[BaseActivity]";                                //
+    private static String TAG;                                                         //
     // --------------------------------------------------------------------------------//
 
     /**
@@ -76,11 +76,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        Log.d(TAG, "Creating BaseActivity...");
-
+        TAG = "[" + this.getClass().getSimpleName() + "]";
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "BaseActivity created.");
     }
 
     /**
@@ -350,7 +347,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user == null)
                 {
-                    Log.d(TAG, "No user logged in. Redirecting to LoginActivity.");
+                    Log.w(TAG, "No user logged in. Redirecting to LoginActivity.");
 
                     Intent intent = new Intent(getBaseContext(), LoginActivity.class);
                     startActivity(intent);

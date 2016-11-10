@@ -47,7 +47,7 @@ public class Bias extends android.app.Application
         db.child("items").addValueEventListener(getValueEventListener());
 
         //TODO: Add documentation to everything missing it
-        //TODO: Add log statements where needed
+        //TODO: Add log statements where needed, change type when appropriate
         //TODO: Change toolbar title to reflect current activity
         //TODO: LOTS of code needs to be cleaned up after adding observer pattern
         //TODO: Use/override CustomDrawerItem to set paint flags for crossing items
@@ -61,6 +61,7 @@ public class Bias extends android.app.Application
     //TODO: Document this.
     public void addObserver(IObserver observer)
     {
+        Log.d(TAG, "Adding new observer: " + observer.toString());
         observers.add(observer);
         notifyObservers(items);
     }
@@ -140,7 +141,7 @@ public class Bias extends android.app.Application
                 items.add(item);
             }
 
-            Log.d(TAG, "DataChangeTask => Shopping list items retrieved successfully.");
+            Log.i(TAG, "DataChangeTask => Shopping list items retrieved successfully.");
             return items;
         }
 

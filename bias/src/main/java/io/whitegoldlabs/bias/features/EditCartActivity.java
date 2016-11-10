@@ -77,7 +77,7 @@ public class EditCartActivity extends BaseActivity
 
         initAuth();
 
-        Log.d(TAG, "EditCartActivity created.");
+        Log.i(TAG, "EditCartActivity created.");
     }
 
     //TODO: Document this.
@@ -87,6 +87,13 @@ public class EditCartActivity extends BaseActivity
         super.onStart();
 
         app.addObserver(this);
+    }
+
+    //TODO: Document this.
+    @Override
+    public void onStop()
+    {
+        super.onStop();
     }
 
     // --------------------------------------------------------------------------------//
@@ -138,7 +145,7 @@ public class EditCartActivity extends BaseActivity
 
         if(newName.length() > MAX_CHARS)
         {
-            Log.d(TAG, "User tried to create new item with too long of a name.");
+            Log.w(TAG, "User tried to create new item with too long of a name.");
 
             toast("Item cannot contain more than " + MAX_CHARS + " characters.");
             return;
@@ -217,7 +224,7 @@ public class EditCartActivity extends BaseActivity
             .getInstance()
             .getReferenceFromUrl(url);
 
-        Log.d(TAG, "Connected to Firebase.");
+        Log.i(TAG, "Connected to Firebase.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -244,11 +251,11 @@ public class EditCartActivity extends BaseActivity
                 {
                     if(error != null)
                     {
-                        Log.e(TAG, "Database write failed! Details: " + error);
+                        Log.e(TAG, "Database write failed! " + error);
                         toast("Database write failed!");
                         return;
                     }
-                    Log.d(TAG, "Database write occurred successfully.");
+                    Log.i(TAG, "Database write occurred successfully.");
                 }
             };
             return completionListener;

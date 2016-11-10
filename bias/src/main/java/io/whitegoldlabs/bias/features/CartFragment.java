@@ -26,12 +26,17 @@ import io.whitegoldlabs.bias.models.Item;
 public class CartFragment extends Fragment implements IObserver
 {
     //TODO: Get progress bar working or remove it.
+    //TODO: Organize all class' fields for consistency
     // Fields -------------------------------------------------------------------------//
-    private static final String TAG = "[CartFragment]";                                //
+    private Bias app;                                                                  //
+                                                                                       //
     private ProgressBar pbListLoading;                                                 //
     private ItemAdapter adapter;                                                       //
-    int nextId;                                                                        //
+                                                                                       //
     ArrayList<Item> items;                                                             //
+    int nextId;                                                                        //
+                                                                                       //
+    private static final String TAG = "[CartFragment]";                                //
     // --------------------------------------------------------------------------------//
 
     //TODO: Document this
@@ -43,9 +48,9 @@ public class CartFragment extends Fragment implements IObserver
     {
         super.onCreate(savedInstanceState);
 
-        //TODO: Remove these if not necessary...
-        Bias app = ((Bias)getActivity().getApplication());
-        items = app.getItems();
+        app = ((Bias)getActivity().getApplication());
+        // If below I set items to app.getItems(), it works just fine.
+        items = new ArrayList<>();
         adapter = new ItemAdapter(items, getContext());
     }
 
@@ -74,9 +79,24 @@ public class CartFragment extends Fragment implements IObserver
     @Override
     public void onStart()
     {
+        Log.d(TAG, "Starting CartFragment...");
         super.onStart();
 
-        ((Bias)getActivity().getApplication()).addObserver(this);
+        app.addObserver(this);
+        Log.i(TAG, "CartFragment began observing BIAS.");
+        Log.d(TAG, "CartFragment started.");
+    }
+
+    //TODO: Document this.
+    @Override
+    public void onStop()
+    {
+        Log.d(TAG, "Stopping CartFragment...");
+        super.onStop();
+
+        app.removeObserver(this);
+        Log.i(TAG, "CartFragment stopped observing BIAS.");
+        Log.d(TAG, "CartFragment stopped.");
     }
 
     //TODO: Can probably remove this... otherwise document
@@ -106,11 +126,13 @@ public class CartFragment extends Fragment implements IObserver
     @Override
     public void update(ArrayList<Item> newItems)
     {
+        items = newItems;
         nextId = getNextId();
 
+        adapter.swapItems(items);
         adapter.notifyDataSetChanged();
 
-        Log.d(TAG, "Adapter notified of data set change.");
+        Log.i(TAG, "Adapter notified of data set change.");
     }
 
     private int getNextId()
@@ -148,7 +170,7 @@ public class CartFragment extends Fragment implements IObserver
             ((TextView)view).getPaintFlags() ^ Paint.STRIKE_THRU_TEXT_FLAG
         );
 
-        Log.d(TAG, "Item un/crossed successfully.");
+        Log.i(TAG, "Item un/crossed successfully.");
     }
 
     /**

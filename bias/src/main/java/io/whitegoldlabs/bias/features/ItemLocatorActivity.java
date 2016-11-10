@@ -45,4 +45,10 @@ public class ItemLocatorActivity extends BaseActivity
         app.addObserver(this);
     }
 
+    //TODO: Document this.
+    @Override
+    public void onStop()
+    {
+        super.onStop();
+    }
 }

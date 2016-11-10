@@ -32,7 +32,7 @@ public class MainActivity extends BaseActivity
         initAuth();
         initDrawer();
 
-        Log.d(TAG, "MainActivity created.");
+        Log.i(TAG, "MainActivity created.");
     }
 
     //TODO: Document this.
@@ -42,5 +42,12 @@ public class MainActivity extends BaseActivity
         super.onStart();
 
         app.addObserver(this);
+    }
+
+    //TODO: Document this.
+    @Override
+    public void onStop()
+    {
+        super.onStop();
     }
 }

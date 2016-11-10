@@ -105,7 +105,7 @@ public class LoginActivity extends BaseActivity
         editEmail.setOnEditorActionListener(getOnEditorActionListener(btnLogin));
         editPassword.setOnEditorActionListener(getOnEditorActionListener(btnLogin));
 
-        Log.d(TAG, "Login form initialized.");
+        Log.i(TAG, "Login form initialized.");
     }
 
     // --------------------------------------------------------------------------------//
@@ -126,7 +126,7 @@ public class LoginActivity extends BaseActivity
             {
                 if(task.isSuccessful())
                 {
-                    Log.d(TAG, "User authenticated successfully.");
+                    Log.i(TAG, "User authenticated successfully.");
 
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
