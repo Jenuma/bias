@@ -129,7 +129,7 @@ public class Bias extends android.app.Application
         @Override
         protected ArrayList<Item> doInBackground(DataSnapshot... params)
         {
-            items.clear();
+            ArrayList<Item> newItems = new ArrayList<>();
 
             Log.d(TAG, "DataChangeTask => Getting shopping list items from database...");
 
@@ -138,17 +138,19 @@ public class Bias extends android.app.Application
                 Item item = snapshot.getValue(Item.class);
                 item.setId(Integer.parseInt(snapshot.getKey()));
 
-                items.add(item);
+                newItems.add(item);
             }
 
+            items.clear();
+            items.addAll(newItems);
+
             Log.i(TAG, "DataChangeTask => Shopping list items retrieved successfully.");
-            return items;
+            return newItems;
         }
 
         @Override
         protected void onPostExecute(ArrayList<Item> result)
         {
-            items = result;
             notifyObservers(result);
         }
     }

@@ -49,7 +49,7 @@ public class CartFragment extends Fragment implements IObserver
         super.onCreate(savedInstanceState);
 
         app = ((Bias)getActivity().getApplication());
-        // If below I set items to app.getItems(), it works just fine.
+
         items = new ArrayList<>();
         adapter = new ItemAdapter(items, getContext());
     }
@@ -126,10 +126,10 @@ public class CartFragment extends Fragment implements IObserver
     @Override
     public void update(ArrayList<Item> newItems)
     {
-        items = newItems;
+        items.clear();
+        items.addAll(newItems);
         nextId = getNextId();
 
-        adapter.swapItems(items);
         adapter.notifyDataSetChanged();
 
         Log.i(TAG, "Adapter notified of data set change.");
