@@ -37,6 +37,7 @@ dependencies {
     }
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
     compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.google.guava:guava:20.0'
     developCompile 'com.google.firebase:firebase-core:9.6.1'
     developCompile 'com.google.firebase:firebase-auth:9.6.1'
     developCompile 'com.google.firebase:firebase-database:9.6.1'

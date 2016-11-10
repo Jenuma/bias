@@ -16,11 +16,17 @@ import android.widget.TextView;
 import static android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
+import com.google.common.collect.HashBiMap;
+
 import com.google.firebase.auth.FirebaseAuth;
 import static com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
 import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.Drawer.OnDrawerItemClickListener;
+import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
+import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
 
@@ -44,7 +50,21 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
     private FirebaseAuth.AuthStateListener authListener;                               //
                                                                                        //
     protected Drawer drawer;                                                           //
-                                                                                       //
+
+    private static final HashBiMap<String, Integer> DRAWER_ITEM_ID_MAP;
+    static
+    {
+        DRAWER_ITEM_ID_MAP = HashBiMap.create();
+        DRAWER_ITEM_ID_MAP.put("MainActivity", 1);
+        DRAWER_ITEM_ID_MAP.put("MyList", 2);
+        DRAWER_ITEM_ID_MAP.put("ItemLocatorActivity", 3);
+        DRAWER_ITEM_ID_MAP.put("ManageSharingActivity", 4);
+        DRAWER_ITEM_ID_MAP.put("EditCartActivity", 5);
+        DRAWER_ITEM_ID_MAP.put("EditMapActivity", 6);
+        DRAWER_ITEM_ID_MAP.put("SettingsActivity", 7);
+        DRAWER_ITEM_ID_MAP.put("SignOut", 8);
+    }
+
     private static final String TAG = "[BaseActivity]";                                //
     // --------------------------------------------------------------------------------//
 
@@ -120,7 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
     @Override
     public void update(ArrayList<Item> newItems)
     {
-        ArrayList<PrimaryDrawerItem> items = new ArrayList<>();
+        ArrayList<IDrawerItem> items = new ArrayList<>();
 
         for(Item item : newItems)
         {
@@ -132,14 +152,10 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
             );
         }
 
-        //TODO: I don't like this 2 being hardcoded here.
-        drawer.getDrawerItem(2).withSubItems(items);
-        drawer.getAdapter().notifyAdapterSubItemsChanged(2);
+        int myListId = DRAWER_ITEM_ID_MAP.get("MyList");
+        ((ExpandableDrawerItem)drawer.getDrawerItem(myListId)).withSubItems(items);
+        drawer.getAdapter().notifyAdapterSubItemsChanged(myListId);
     }
-
-    // --------------------------------------------------------------------------------//
-    // Protected Methods                                                               //
-    // --------------------------------------------------------------------------------//
 
     /**
      * Builds the navigation drawer for the calling activity.
@@ -148,7 +164,14 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        drawer = DrawerWrapper.build(this, toolbar);
+        drawer = DrawerWrapper.build
+        (
+            this,
+            toolbar,
+            DRAWER_ITEM_ID_MAP,
+            getOnDrawerItemClickListener(this),
+            getOnDrawerListener(this)
+        );
     }
 
     /**
@@ -193,9 +216,78 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
         Log.d(TAG, "Soft keyboard hidden.");
     }
 
-    // --------------------------------------------------------------------------------//
-    // Listeners                                                                       //
-    // --------------------------------------------------------------------------------//
+    /**
+     * Creates a new OnDrawerItemClickListener for clicking an item in the drawer.
+     *
+     * @param activity The activity the drawer resides in.
+     * @return The new OnDrawerItemClickListener.
+     */
+    private OnDrawerItemClickListener getOnDrawerItemClickListener
+    (
+            final Activity activity
+    )
+    {
+        return new Drawer.OnDrawerItemClickListener()
+        {
+            @Override
+            public boolean onItemClick(View view, int position, IDrawerItem drawerItem)
+            {
+                Class dest;
+                switch((int)drawerItem.getIdentifier())
+                {
+                    //TODO: Clean this up so these numbers aren't hardcoded.
+                    case 1:
+                        dest = MainActivity.class;
+                        break;
+                    case 2:
+                        return false;
+                    case 3:
+                        dest = ItemLocatorActivity.class;
+                        break;
+                    case 4:
+                        return false;
+                    case 5:
+                        dest = EditCartActivity.class;
+                        break;
+                    case 6:
+                        return false;
+                    case 7:
+                        return false;
+                    case 8:
+                        auth.signOut();
+                        return false;
+                    default:
+                        return false;
+                }
+
+                if(!activity.getClass().getSimpleName().equals(dest.getSimpleName()))
+                {
+                    Intent intent = new Intent(activity, dest);
+                    activity.startActivity(intent);
+                }
+                return false;
+            }
+        };
+    }
+
+    //TODO: Document this.
+    private OnDrawerListener getOnDrawerListener(final Activity activity)
+    {
+        return new Drawer.OnDrawerListener()
+        {
+            @Override
+            public void onDrawerClosed(View drawerView)
+            {
+                String activityName = activity.getClass().getSimpleName();
+                drawer.setSelection(DRAWER_ITEM_ID_MAP.get(activityName));
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {}
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {}
+        };
+    }
 
     /**
      * Creates a new OnEditorActionListener for pressing the "done" key on the soft
