@@ -80,7 +80,7 @@ public class DrawerWrapper
                     .withIdentifier(idMap.get("MyList"))
                     .withIcon(FontAwesome.Icon.faw_list)
                     .withName("My List")
-                    .withDescription("X of Y items crossed.")
+                    .withDescription("0 of 0 items crossed.")
                     .withSubItems(getListItems(activity))
                     .withTextColor(primaryColor)
                     .withIconColor(accentColor)

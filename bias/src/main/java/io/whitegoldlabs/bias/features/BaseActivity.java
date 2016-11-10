@@ -21,6 +21,7 @@ import com.google.common.collect.HashBiMap;
 import com.google.firebase.auth.FirebaseAuth;
 import static com.google.firebase.auth.FirebaseAuth.AuthStateListener;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerItemClickListener;
 import com.mikepenz.materialdrawer.Drawer.OnDrawerListener;
@@ -138,20 +139,36 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
     public void update(ArrayList<Item> newItems)
     {
         ArrayList<IDrawerItem> items = new ArrayList<>();
+        int crossedCount = 0;
 
         for(Item item : newItems)
         {
+            if(item.isCrossed())
+            {
+                crossedCount++;
+            }
+
             items.add
             (
                 new PrimaryDrawerItem()
                     .withName(item.getName())
+                    .withIcon(FontAwesome.Icon.faw_caret_right)
                     .withSelectable(false)
             );
         }
 
         int myListId = DRAWER_ITEM_ID_MAP.get("MyList");
-        ((ExpandableDrawerItem)drawer.getDrawerItem(myListId)).withSubItems(items);
+        ExpandableDrawerItem myListDrawerItem =
+                ((ExpandableDrawerItem)drawer.getDrawerItem(myListId));
+
+        myListDrawerItem.withSubItems(items);
+        myListDrawerItem.withDescription
+        (
+            crossedCount + " of " + items.size() + " items crossed."
+        );
+
         drawer.getAdapter().notifyAdapterSubItemsChanged(myListId);
+        drawer.getAdapter().notifyAdapterItemChanged(myListId);
     }
 
     /**
