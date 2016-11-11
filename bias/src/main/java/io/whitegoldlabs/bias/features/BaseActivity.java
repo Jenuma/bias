@@ -35,6 +35,7 @@ import io.whitegoldlabs.bias.Bias;
 import io.whitegoldlabs.bias.R;
 import io.whitegoldlabs.bias.common.DrawerWrapper;
 import io.whitegoldlabs.bias.common.IObserver;
+import io.whitegoldlabs.bias.common.StrikableDrawerItem;
 import io.whitegoldlabs.bias.models.Item;
 
 /**
@@ -143,18 +144,18 @@ public abstract class BaseActivity extends AppCompatActivity implements IObserve
 
         for(Item item : newItems)
         {
+            StrikableDrawerItem drawerItem = new StrikableDrawerItem()
+                .withName(item.getName())
+                .withIcon(FontAwesome.Icon.faw_caret_right)
+                .withSelectable(false);
+
             if(item.isCrossed())
             {
                 crossedCount++;
+                drawerItem.withCrossed(true);
             }
 
-            items.add
-            (
-                new PrimaryDrawerItem()
-                    .withName(item.getName())
-                    .withIcon(FontAwesome.Icon.faw_caret_right)
-                    .withSelectable(false)
-            );
+            items.add(drawerItem);
         }
 
         int myListId = DRAWER_ITEM_ID_MAP.get("MyList");
